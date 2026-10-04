@@ -33,9 +33,11 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   final headWear = TextEditingController();
   final sideWear = TextEditingController();
+  final measuredDepth = TextEditingController();
   String? railType;
   double? headResult;
   double? sideResult;
+  double? depthResult;
 
   static const railTypes = <String>[
     '60E1 / 60E2 plain line',
@@ -61,21 +63,24 @@ class _RailWearHomeState extends State<RailWearHome> {
   void dispose() {
     headWear.dispose();
     sideWear.dispose();
+    measuredDepth.dispose();
     super.dispose();
   }
 
   void calculate() {
     final head = double.tryParse(headWear.text);
     final side = double.tryParse(sideWear.text);
-    if (railType == null || head == null || side == null) {
+    final depth = double.tryParse(measuredDepth.text);
+    if (railType == null || head == null || side == null || depth == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Select the rail type and enter both wear readings.'),
+        content: Text('Select the rail type and enter all three measurements.'),
       ));
       return;
     }
     setState(() {
       headResult = head;
       sideResult = side;
+      depthResult = depth;
     });
   }
 
@@ -153,11 +158,14 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   @override
   Widget build(BuildContext context) {
-    final hasResult = headResult != null && sideResult != null && railType != null;
-    final totalWear = hasResult ? headResult! + sideResult! : 0.0;
+    final hasResult = headResult != null && sideResult != null && depthResult != null && railType != null;
     final lateralLoss = hasResult ? 9.0 - (0.5 * sideResult!) : 0.0;
-    final sideOk = !hasResult || lateralLoss <= 9.0;
     final sidewornMinDepth = hasResult ? minimumDepth[railType]! + lateralLoss : 0.0;
+    final rawGrindAvailable = hasResult ? depthResult! - sidewornMinDepth : 0.0;
+    final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
+    final lowAllowance = hasResult && grindAvailable > 0 && grindAvailable < 5;
+    final limitReached = hasResult && grindAvailable <= 0;
+    final sideOk = !limitReached;
 
     return Scaffold(
       body: SafeArea(
@@ -201,7 +209,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                     isExpanded: true,
                     decoration: fieldDecoration('').copyWith(suffixText: null),
                     items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
-                    onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; }),
+                    onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; depthResult = null; }),
                   ),
                 ),
               ]),
@@ -209,6 +217,17 @@ class _RailWearHomeState extends State<RailWearHome> {
             const SizedBox(height: 10),
             measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
             measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Step-gauge reading', controller: sideWear),
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: border)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('NR4 STEPPED SIDEWEAR GAUGE', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w900, fontSize: 16)),
+                const SizedBox(height: 8),
+                Center(child: Image.asset('assets/nr4_gauge.jpg', height: 150, fit: BoxFit.contain)),
+              ]),
+            ),
+            measurementCard(icon: Icons.straighten, title: 'Measured Rail Depth (mm)', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
             const SizedBox(height: 8),
             SizedBox(
               height: 66,
@@ -247,10 +266,24 @@ class _RailWearHomeState extends State<RailWearHome> {
                     ])),
                   ]),
                   const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                    decoration: BoxDecoration(
+                      color: (lowAllowance || limitReached) ? const Color(0xFF3A0909) : const Color(0xFF0A2A17),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: (lowAllowance || limitReached) ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
+                    ),
+                    child: (lowAllowance || limitReached)
+                      ? FlashingWarning(text: limitReached ? 'DO NOT GRIND — LIMIT REACHED' : 'DO NOT GRIND MORE THAN: $grindAvailable mm')
+                      : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
+                  ),
+                  const SizedBox(height: 16),
                   Row(children: [
                     infoTile(Icons.railway_alert, 'Rail type', railType!),
                     const SizedBox(width: 8),
-                    infoTile(Icons.straighten, 'Minimum depth', '${minimumDepth[railType]!.toStringAsFixed(0)} mm'),
+                    infoTile(Icons.straighten, 'Minimum depth', '${sidewornMinDepth.toStringAsFixed(1)} mm'),
                     const SizedBox(width: 8),
                     infoTile(Icons.settings, 'Lateral head loss (L)', '${lateralLoss.toStringAsFixed(1)} mm'),
                   ]),
@@ -292,4 +325,29 @@ class _RailWearHomeState extends State<RailWearHome> {
       ),
     );
   }
+}
+
+
+class FlashingWarning extends StatefulWidget {
+  final String text;
+  const FlashingWarning({super.key, required this.text});
+  @override
+  State<FlashingWarning> createState() => _FlashingWarningState();
+}
+
+class _FlashingWarningState extends State<FlashingWarning> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))..repeat(reverse: true);
+  }
+  @override
+  void dispose() { _controller.dispose(); super.dispose(); }
+  @override
+  Widget build(BuildContext context) => FadeTransition(
+    opacity: Tween<double>(begin: 0.35, end: 1.0).animate(_controller),
+    child: Text(widget.text, textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.redAccent)),
+  );
 }
