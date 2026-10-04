@@ -12,7 +12,7 @@ class RailWearApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rail Wear Calculator',
       theme: ThemeData.dark(useMaterial3: true).copyWith(
-        scaffoldBackgroundColor: const Color(0xFF050A0E),
+        scaffoldBackgroundColor: const Color(0xFF03070A),
         colorScheme: ColorScheme.fromSeed(seedColor: gold, brightness: Brightness.dark),
       ),
       home: const RailWearHome(),
@@ -28,8 +28,8 @@ class RailWearHome extends StatefulWidget {
 
 class _RailWearHomeState extends State<RailWearHome> {
   static const gold = Color(0xFFFFC928);
-  static const panel = Color(0xFF0A1720);
-  static const border = Color(0xFF29485C);
+  static const panel = Color(0xFF09141B);
+  static const border = Color(0xFF203A49);
 
   final headWear = TextEditingController();
   final sideWear = TextEditingController();
@@ -170,7 +170,7 @@ class _RailWearHomeState extends State<RailWearHome> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(18, 16, 18, 30),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 34),
           children: [
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Expanded(
@@ -178,7 +178,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Text.rich(TextSpan(children: [
                     TextSpan(text: 'Rail Wear ', style: TextStyle(color: gold)),
                     TextSpan(text: 'Calculator'),
-                  ]), style: TextStyle(fontSize: 31, fontWeight: FontWeight.w900)),
+                  ]), style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: -0.7)),
                   SizedBox(height: 4),
                   Text('UK RAIL STANDARDS • RULE OF 9',
                     style: TextStyle(letterSpacing: 2.2, color: Color(0xFFB8C9D7), fontWeight: FontWeight.w600)),
@@ -241,17 +241,18 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ]),
                 const SizedBox(height: 12),
                 Container(
-                  height: 190,
+                  height: 150,
                   width: double.infinity,
-                  decoration: BoxDecoration(color: const Color(0xFFE9EDF0), borderRadius: BorderRadius.circular(10)),
-                  child: const CustomPaint(painter: Nr4GaugePainter()),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(color: const Color(0xFFE9EDF0), borderRadius: BorderRadius.circular(12)),
+                  child: Image.asset('assets/nr4_gauge.jpg', fit: BoxFit.contain),
                 ),
               ]),
             ),
             measurementCard(icon: Icons.height, title: 'Rail depth', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
             const SizedBox(height: 8),
             SizedBox(
-              height: 66,
+              height: 60,
               child: FilledButton.icon(
                 style: FilledButton.styleFrom(
                   backgroundColor: gold,
@@ -260,7 +261,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ),
                 onPressed: calculate,
                 icon: const Icon(Icons.calculate, size: 29),
-                label: const Text('CALCULATE', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
+                label: const Text('CALCULATE SAFE LIMIT', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: .4)),
               ),
             ),
             if (hasResult) ...[
@@ -313,9 +314,13 @@ class _RailWearHomeState extends State<RailWearHome> {
             ],
             const SizedBox(height: 14),
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
               decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
-              child: const SizedBox(height: 190, width: double.infinity, child: CustomPaint(painter: RailProfilePainter())),
+              child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('MEASUREMENT REFERENCE', style: TextStyle(color: gold, fontSize: 12, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
+                SizedBox(height: 10),
+                SizedBox(height: 170, width: double.infinity, child: CustomPaint(painter: RailProfilePainter())),
+              ]),
             ),
             const SizedBox(height: 14),
             const Text('RAIL DEPTH & SIDEWEAR', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
@@ -413,6 +418,7 @@ class RailProfilePainter extends CustomPainter {
     final rail=Paint()..color=const Color(0xFFB8BDC1);
     final line=Paint()..color=const Color(0xFFFFC928)..strokeWidth=4..strokeCap=StrokeCap.round;
     final cx=size.width*.5;
+    canvas.drawShadow(Path()..addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-62,22,124,34),const Radius.circular(14))), Colors.black, 7, false);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-62,22,124,34),const Radius.circular(14)),rail);
     canvas.drawRect(Rect.fromLTWH(cx-17,52,34,82),rail);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-72,130,144,30),const Radius.circular(8)),rail);
