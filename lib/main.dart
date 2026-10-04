@@ -207,7 +207,14 @@ class _RailWearHomeState extends State<RailWearHome> {
                   child: DropdownButtonFormField<String>(
                     value: railType,
                     isExpanded: true,
-                    decoration: fieldDecoration('').copyWith(suffixText: null),
+                    decoration: InputDecoration(
+                      hintText: 'Select rail type',
+                      filled: true,
+                      fillColor: const Color(0xFF07121A),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF52738A))),
+                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: gold, width: 2)),
+                    ),
                     items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
                     onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; depthResult = null; }),
                   ),
@@ -219,12 +226,28 @@ class _RailWearHomeState extends State<RailWearHome> {
             measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Step-gauge reading', controller: sideWear),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: border)),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('NR4 STEPPED SIDEWEAR GAUGE', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w900, fontSize: 16)),
-                const SizedBox(height: 8),
-                Center(child: Image.asset('assets/nr4_gauge.jpg', height: 150, fit: BoxFit.contain)),
+              child: Row(children: [
+                const Expanded(
+                  flex: 4,
+                  child: Text('NR4 STEPPED\nSIDEWEAR GAUGE',
+                    style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w900, fontSize: 15)),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 6,
+                  child: SizedBox(
+                    height: 105,
+                    child: Image.asset(
+                      'assets/nr4_gauge.jpg',
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => const Center(
+                        child: Icon(Icons.straighten, color: Colors.black54, size: 52),
+                      ),
+                    ),
+                  ),
+                ),
               ]),
             ),
             measurementCard(icon: Icons.straighten, title: 'Measured Rail Depth (mm)', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
