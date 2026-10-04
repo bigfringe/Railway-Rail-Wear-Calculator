@@ -245,7 +245,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   width: double.infinity,
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(color: const Color(0xFFE9EDF0), borderRadius: BorderRadius.circular(12)),
-                  child: Image.asset('assets/nr4_gauge.jpg', fit: BoxFit.contain),
+                  child: const CustomPaint(painter: Nr4GaugePainter()),
                 ),
               ]),
             ),
