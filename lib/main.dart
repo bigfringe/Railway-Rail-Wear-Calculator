@@ -398,7 +398,7 @@ class Nr4GaugePainter extends CustomPainter {
     canvas.drawPath(body, metal); canvas.drawPath(body, edge);
     final bar=RRect.fromRectAndRadius(Rect.fromLTWH(size.width*.48,size.height*.36,size.width*.43,size.height*.20),const Radius.circular(4));
     canvas.drawRRect(bar,metal); canvas.drawRRect(bar,edge);
-    for(int i=0;i<10;i++){final x=size.width*(.51+i*.041); canvas.drawLine(Offset(x,size.height*.37),Offset(x,size.height*(i.isEven?.47:.44)),ink);}
+    for(int i=0;i<10;i++){final x=size.width*(.51+i*.041); canvas.drawLine(Offset(x,size.height*.37),Offset(x,size.height*(i.isEven ? .47 : .44)),ink);}
     final tp=TextPainter(textDirection:TextDirection.ltr,textAlign:TextAlign.center);
     tp.text=const TextSpan(text:'NR4',style:TextStyle(color:Color(0xFF202428),fontSize:22,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.20,size.height*.33));
     tp.text=const TextSpan(text:'STEPPED SIDEWEAR GAUGE',style:TextStyle(color:Color(0xFF202428),fontSize:11,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.56,size.height*.62));
