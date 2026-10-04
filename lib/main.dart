@@ -244,11 +244,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
                     width: double.infinity,
-                    color: Color(0xFF101820),
-                    padding: const EdgeInsets.all(8),
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(6),
                     child: Image.asset(
                       'assets/nr4_gauge.jpg',
-                      height: 120,
+                      height: 190,
                       fit: BoxFit.contain,
                       gaplessPlayback: true,
                     ),
@@ -319,11 +319,24 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ]),
               ),
             ],
-            const SizedBox(height: 18),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+              child: const Row(children: [
+                Expanded(child: Column(children: [Icon(Icons.height, color: gold, size: 42), SizedBox(height: 4), Text('Rail depth', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))])),
+                SizedBox(width: 12),
+                Icon(Icons.railway_alert, color: Colors.white70, size: 72),
+                SizedBox(width: 12),
+                Expanded(child: Column(children: [Icon(Icons.compare_arrows, color: gold, size: 42), SizedBox(height: 4), Text('Sidewear', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))])),
+              ]),
+            ),
+            const SizedBox(height: 14),
             const Text('RAIL DEPTH & SIDEWEAR', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Expanded(child: Container(
+            Column(children: [
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -334,9 +347,10 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Text('Squats                                  Max 3 mm'),
 
                 ]),
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: Container(
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -348,7 +362,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Divider(),
                   Text('Sideworn minimum depth\nBase minimum + L'),
                 ]),
-              )),
+              ),
             ]),
           ],
         ),
