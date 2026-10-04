@@ -155,7 +155,9 @@ class _RailWearHomeState extends State<RailWearHome> {
   Widget build(BuildContext context) {
     final hasResult = headResult != null && sideResult != null && railType != null;
     final totalWear = hasResult ? headResult! + sideResult! : 0.0;
-    final sideOk = !hasResult || sideResult! < 9.0;
+    final lateralLoss = hasResult ? 9.0 - (0.5 * sideResult!) : 0.0;
+    final sideOk = !hasResult || lateralLoss <= 9.0;
+    final sidewornMinDepth = hasResult ? minimumDepth[railType]! + lateralLoss : 0.0;
 
     return Scaffold(
       body: SafeArea(
@@ -240,7 +242,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                         style: TextStyle(color: sideOk ? const Color(0xFF00E653) : Colors.redAccent,
                           fontWeight: FontWeight.w900, fontSize: 18)),
                       const SizedBox(height: 3),
-                      Text(sideOk ? 'WEAR READINGS RECORDED' : 'SIDE WEAR LIMIT REACHED',
+                      Text(sideOk ? 'SIDEWEAR ASSESSMENT' : 'SIDE WEAR LIMIT REACHED',
                         style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
                     ])),
                   ]),
@@ -250,7 +252,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                     const SizedBox(width: 8),
                     infoTile(Icons.straighten, 'Minimum depth', '${minimumDepth[railType]!.toStringAsFixed(0)} mm'),
                     const SizedBox(width: 8),
-                    infoTile(Icons.settings, 'Current total wear', '${totalWear.toStringAsFixed(1)} mm'),
+                    infoTile(Icons.settings, 'Lateral head loss (L)', '${lateralLoss.toStringAsFixed(1)} mm'),
                   ]),
                 ]),
               ),
@@ -277,11 +279,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('📖  QUICK REFERENCE', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
-                  Text('Rule of 9\nHead wear + side wear'),
+                  Text('NR4 relationship\nL = 9 − 0.5S'),
                   Divider(),
                   Text('Pre-1979 rail\nUltrasonic test required before grinding'),
                   Divider(),
-                  Text('Side wear limit\n9 mm'),
+                  Text('Sideworn minimum depth\nBase minimum + L'),
                 ]),
               )),
             ]),
