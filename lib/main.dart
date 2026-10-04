@@ -276,9 +276,17 @@ class _RailWearHomeState extends State<RailWearHome> {
                       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF52738A))),
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: gold, width: 2)),
                     ),
+                    menuMaxHeight: 520,
                     items: railTypes.map((type) => DropdownMenuItem(
                       value: type,
-                      child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12), maxLines: 4),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: const BoxDecoration(
+                          border: Border(bottom: BorderSide(color: Color(0xFF203A49))),
+                        ),
+                        child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12, height: 1.25), maxLines: 4),
+                      ),
                     )).toList(),
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
