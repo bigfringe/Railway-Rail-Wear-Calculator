@@ -31,11 +31,9 @@ class _RailWearHomeState extends State<RailWearHome> {
   static const panel = Color(0xFF09141B);
   static const border = Color(0xFF203A49);
 
-  final headWear = TextEditingController();
   final sideWear = TextEditingController();
   final measuredDepth = TextEditingController();
   String? railType;
-  double? headResult;
   double? sideResult;
   double? depthResult;
 
@@ -61,24 +59,27 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   @override
   void dispose() {
-    headWear.dispose();
     sideWear.dispose();
     measuredDepth.dispose();
     super.dispose();
   }
 
   void calculate() {
-    final head = double.tryParse(headWear.text);
     final side = double.tryParse(sideWear.text);
     final depth = double.tryParse(measuredDepth.text);
-    if (railType == null || head == null || side == null || depth == null) {
+    if (railType == null || side == null || depth == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Select the rail type and enter all three measurements.'),
+        content: Text('Select the rail type, enter the sidewear reading and actual rail depth.'),
+      ));
+      return;
+    }
+    if (side < 0 || side > 18 || depth <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Check the measurements entered.'),
       ));
       return;
     }
     setState(() {
-      headResult = head;
       sideResult = side;
       depthResult = depth;
     });
@@ -158,7 +159,7 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   @override
   Widget build(BuildContext context) {
-    final hasResult = headResult != null && sideResult != null && depthResult != null && railType != null;
+    final hasResult = sideResult != null && depthResult != null && railType != null;
     final lateralLoss = hasResult ? 9.0 - (0.5 * sideResult!) : 0.0;
     final sidewornMinDepth = hasResult ? minimumDepth[railType]! + lateralLoss : 0.0;
     final rawGrindAvailable = hasResult ? depthResult! - sidewornMinDepth : 0.0;
@@ -216,14 +217,13 @@ class _RailWearHomeState extends State<RailWearHome> {
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: gold, width: 2)),
                     ),
                     items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
-                    onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; depthResult = null; }),
+                    onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
                 ),
               ]),
             ),
             const SizedBox(height: 10),
-            measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
-            measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Sidewear step-gauge reading', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear Reading', subtitle: 'Enter the number shown by the NR4 stepped gauge', controller: sideWear),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
@@ -249,7 +249,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ),
               ]),
             ),
-            measurementCard(icon: Icons.height, title: 'Measured Rail Depth (mm)', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
+            measurementCard(icon: Icons.height, title: 'Actual Rail Depth', subtitle: 'Enter the total measured rail height', controller: measuredDepth),
             const SizedBox(height: 8),
             SizedBox(
               height: 60,
@@ -279,11 +279,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                       color: sideOk ? const Color(0xFF00E653) : Colors.redAccent, size: 42),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(sideOk ? 'RESULT' : 'DO NOT GRIND',
+                      Text(sideOk ? 'GRINDING RESULT' : 'DO NOT GRIND',
                         style: TextStyle(color: sideOk ? const Color(0xFF00E653) : Colors.redAccent,
                           fontWeight: FontWeight.w900, fontSize: 18)),
                       const SizedBox(height: 3),
-                      Text(sideOk ? 'SIDEWEAR ASSESSMENT' : 'SIDE WEAR LIMIT REACHED',
+                      Text(sideOk ? 'GRIND PERMITTED' : 'RAIL LIMIT REACHED',
                         style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
                     ])),
                   ]),
@@ -301,14 +301,6 @@ class _RailWearHomeState extends State<RailWearHome> {
                       : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
                   ),
-                  const SizedBox(height: 16),
-                  Row(children: [
-                    infoTile(Icons.railway_alert, 'Rail type', railType!),
-                    const SizedBox(width: 8),
-                    infoTile(Icons.straighten, 'Minimum depth', '${sidewornMinDepth.toStringAsFixed(1)} mm'),
-                    const SizedBox(width: 8),
-                    infoTile(Icons.settings, 'Lateral head loss (L)', '${lateralLoss.toStringAsFixed(1)} mm'),
-                  ]),
                 ]),
               ),
             ],
