@@ -91,11 +91,11 @@ class _RailWearHomeState extends State<RailWearHome> {
     fillColor: const Color(0xFF07121A),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       borderSide: const BorderSide(color: Color(0xFF52738A)),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       borderSide: const BorderSide(color: gold, width: 2),
     ),
   );
@@ -111,11 +111,11 @@ class _RailWearHomeState extends State<RailWearHome> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: panel,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: border),
       ),
       child: Row(children: [
-        SizedBox(width: 44, child: Icon(icon, size: 30, color: gold)),
+        Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF111F29), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: Icon(icon, size: 27, color: gold)),
         const SizedBox(width: 10),
         Expanded(
           flex: 5,
@@ -143,7 +143,7 @@ class _RailWearHomeState extends State<RailWearHome> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF0A1720),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: border),
       ),
       child: Column(children: [
@@ -170,7 +170,7 @@ class _RailWearHomeState extends State<RailWearHome> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 26),
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 30),
           children: [
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Expanded(
@@ -178,7 +178,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Text.rich(TextSpan(children: [
                     TextSpan(text: 'Rail Wear ', style: TextStyle(color: gold)),
                     TextSpan(text: 'Calculator'),
-                  ]), style: TextStyle(fontSize: 29, fontWeight: FontWeight.w800)),
+                  ]), style: TextStyle(fontSize: 31, fontWeight: FontWeight.w900)),
                   SizedBox(height: 4),
                   Text('UK RAIL STANDARDS • RULE OF 9',
                     style: TextStyle(letterSpacing: 2.2, color: Color(0xFFB8C9D7), fontWeight: FontWeight.w600)),
@@ -193,9 +193,9 @@ class _RailWearHomeState extends State<RailWearHome> {
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(14), border: Border.all(color: border)),
+              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
               child: Row(children: [
-                const SizedBox(width: 44, child: Icon(Icons.train, size: 30, color: gold)),
+                Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF111F29), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: const Icon(Icons.train, size: 27, color: gold)),
                 const SizedBox(width: 10),
                 const Expanded(flex: 4, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Rail type', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
@@ -212,8 +212,8 @@ class _RailWearHomeState extends State<RailWearHome> {
                       filled: true,
                       fillColor: const Color(0xFF07121A),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF52738A))),
-                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: gold, width: 2)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF52738A))),
+                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: gold, width: 2)),
                     ),
                     items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
                     onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; depthResult = null; }),
@@ -229,7 +229,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: panel,
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: border),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -277,7 +277,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: const Color(0xFF071A12),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(18),
                   border: Border.all(color: sideOk ? const Color(0xFF00D84A) : Colors.redAccent, width: 2),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -300,7 +300,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                     decoration: BoxDecoration(
                       color: (lowAllowance || limitReached) ? const Color(0xFF3A0909) : const Color(0xFF0A2A17),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(18),
                       border: Border.all(color: (lowAllowance || limitReached) ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
                     ),
                     child: (lowAllowance || limitReached)
@@ -319,11 +319,13 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ]),
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
+            const Text('REFERENCE', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
+            const SizedBox(height: 8),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(child: Container(
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(14), border: Border.all(color: border)),
+                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('⚠  DEFECT GUIDANCE (FAMILY OF 3)', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
@@ -337,7 +339,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               const SizedBox(width: 10),
               Expanded(child: Container(
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(14), border: Border.all(color: border)),
+                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('📖  QUICK REFERENCE', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
