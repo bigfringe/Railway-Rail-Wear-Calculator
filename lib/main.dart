@@ -116,13 +116,28 @@ class _RailWearHomeState extends State<RailWearHome> {
       sideResult = side;
       depthResult = depth;
     });
-    _playTrainHorn();
+    final lateralLoss = 9.0 - (0.5 * side);
+    final adjustedMinimum = selectedMinimumDepth + lateralLoss;
+    if (depth > adjustedMinimum) {
+      _playTrainHorn();
+    } else {
+      _playFailHorn();
+    }
   }
 
   Future<void> _playTrainHorn() async {
     try {
       await _hornPlayer.stop();
       await _hornPlayer.play(AssetSource('train-horn-2 (1).mp3'));
+    } catch (_) {
+      // Keep the calculation usable even if audio playback fails.
+    }
+  }
+
+  Future<void> _playFailHorn() async {
+    try {
+      await _hornPlayer.stop();
+      await _hornPlayer.play(AssetSource('TRNHorn_Train horn 3 (ID 2847)_BigSoundBank.com (1).wav'));
     } catch (_) {
       // Keep the calculation usable even if audio playback fails.
     }
