@@ -208,7 +208,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             ),
             const SizedBox(height: 10),
             measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
-            measurementCard(icon: Icons.compare_arrows, title: 'Side wear (mm)', subtitle: 'Lateral wear depth', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Step-gauge reading', controller: sideWear),
             const SizedBox(height: 8),
             SizedBox(
               height: 66,
