@@ -42,17 +42,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
   RailLimit? rail;
   final depth = TextEditingController();
   final sidewear = TextEditingController();
+  final nr4Step = TextEditingController();
   bool nearFishplate = false;
   bool pre1979 = false;
 
   @override
-  void dispose() { depth.dispose(); sidewear.dispose(); super.dispose(); }
+  void dispose() { depth.dispose(); sidewear.dispose(); nr4Step.dispose(); super.dispose(); }
 
   void calculate() {
     final measured = double.tryParse(depth.text);
     final lateralLoss = double.tryParse(sidewear.text);
-    if (rail == null || measured == null || lateralLoss == null) {
-      return showResult('Enter rail section, measured rail depth and sidewear.');
+    final step = double.tryParse(nr4Step.text);
+    if (rail == null || measured == null || lateralLoss == null || step == null) {
+      return showResult('Enter rail section, measured rail depth, lateral head loss and NR4 step reading.');
+    }
+    final ruleOf9Loss = 9 - (0.5 * step);
+    if ((lateralLoss - ruleOf9Loss).abs() > 0.25) {
+      return showResult('CHECK READINGS: NR4 step reading gives L = 9 - 0.5S = \${ruleOf9Loss.toStringAsFixed(1)} mm, but entered lateral head loss is \${lateralLoss.toStringAsFixed(1)} mm. Recheck the measurements before continuing.');
     }
     if (pre1979) {
       return showResult('STOP: pre-1979 rail selected. Ultrasonic-test requirement must be satisfied before any grinding/reprofiling decision.');
@@ -60,7 +66,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final requiredDepth = rail!.minimumDepth + (nearFishplate ? lateralLoss : 0);
     final margin = measured - requiredDepth;
     final status = margin < 0 ? 'BELOW BASELINE DEPTH' : 'BASELINE DEPTH CHECK PASSED';
-    showResult('$status\n\nRequired depth: ${requiredDepth.toStringAsFixed(1)} mm\nMeasured depth: ${measured.toStringAsFixed(1)} mm\nMargin: ${margin.toStringAsFixed(1)} mm\n\nThis is a GB compatibility depth check only. Grinding allowance / Rule-of-9 remains locked until the current Network Rail operational rule is verified.');
+    showResult('$status\n\nRequired depth: ${requiredDepth.toStringAsFixed(1)} mm\nMeasured depth: ${measured.toStringAsFixed(1)} mm\nMargin: ${margin.toStringAsFixed(1)} mm\n\nThis is a GB compatibility depth check only. Rule-of-9 measurement consistency is checked using L = 9 - 0.5S. Grinding allowance remains separate and locked until its operational limits are verified.');
   }
 
   void showResult(String text) => showDialog<void>(
@@ -112,7 +118,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         const SizedBox(height: 18),
         SizedBox(height: 58, child: FilledButton.icon(onPressed: calculate, icon: const Icon(Icons.calculate), label: const Text('CALCULATE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))),
         const SizedBox(height: 24),
-        const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('Rule-of-9 / permissible grinding remains disabled until the current controlled Network Rail rule is verified.'))),
+        const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('Rule-of-9 measurement check is enabled. Permissible grinding/reprofiling remains disabled until the applicable controlled operational limits are verified.'))),
       ],
     ),
   );
