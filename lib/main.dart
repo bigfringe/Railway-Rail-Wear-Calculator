@@ -322,10 +322,43 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
-                    height: 210,
+                    height: 250,
                     width: double.infinity,
                     color: Colors.white,
-                    child: Image.asset('assets/rail_reference.jpg', fit: BoxFit.contain),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(72, 18, 34, 18),
+                          child: Image.asset('assets/rail_reference.jpg', fit: BoxFit.contain),
+                        ),
+                        const Positioned(
+                          left: 16, top: 38, bottom: 28,
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            Icon(Icons.arrow_upward, color: Colors.red, size: 27),
+                            Expanded(child: SizedBox(width: 3, child: ColoredBox(color: Colors.red))),
+                            Icon(Icons.arrow_downward, color: Colors.red, size: 27),
+                          ]),
+                        ),
+                        const Positioned(
+                          left: 48, top: 103,
+                          child: Text('Rail depth\n(mm)', textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w900)),
+                        ),
+                        const Positioned(
+                          right: 52, top: 28,
+                          child: Column(children: [
+                            Text('Sidewear (mm)', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w900)),
+                            SizedBox(height: 2),
+                            Row(children: [
+                              Icon(Icons.arrow_back, color: Colors.red, size: 27),
+                              SizedBox(width: 74, height: 3, child: ColoredBox(color: Colors.red)),
+                              Icon(Icons.arrow_forward, color: Colors.red, size: 27),
+                            ]),
+                          ]),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
