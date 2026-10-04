@@ -38,13 +38,24 @@ class _RailWearHomeState extends State<RailWearHome> {
   String? railType;
 
   static const railTypes = <String>[
-    '60E1 / 60E2',
+    '60E1 / 60E2 plain line',
+    '60E1 / 60E2 S&C',
     '56E1 / 113A',
     '109 / 110A',
     '98 FB',
     '95 / 97.5 BH',
     '85 BH',
   ];
+
+  static const minimumDepth = <String, double>{
+    '60E1 / 60E2 plain line': 158,
+    '60E1 / 60E2 S&C': 162,
+    '56E1 / 113A': 145,
+    '109 / 110A': 145,
+    '98 FB': 131,
+    '95 / 97.5 BH': 131,
+    '85 BH': 127,
+  };
 
   @override
   void dispose() {
