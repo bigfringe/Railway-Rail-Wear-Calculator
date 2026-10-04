@@ -7,18 +7,13 @@ class RailWearApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const gold = Color(0xFFFFC928);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Railway Rail Wear Calculator',
+      title: 'Rail Wear Calculator',
       theme: ThemeData.dark(useMaterial3: true).copyWith(
-        scaffoldBackgroundColor: const Color(0xFF0B0D0F),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-          brightness: Brightness.dark,
-        ),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-        ),
+        scaffoldBackgroundColor: const Color(0xFF050A0E),
+        colorScheme: ColorScheme.fromSeed(seedColor: gold, brightness: Brightness.dark),
       ),
       home: const RailWearHome(),
     );
@@ -27,15 +22,20 @@ class RailWearApp extends StatelessWidget {
 
 class RailWearHome extends StatefulWidget {
   const RailWearHome({super.key});
-
   @override
   State<RailWearHome> createState() => _RailWearHomeState();
 }
 
 class _RailWearHomeState extends State<RailWearHome> {
+  static const gold = Color(0xFFFFC928);
+  static const panel = Color(0xFF0A1720);
+  static const border = Color(0xFF29485C);
+
   final headWear = TextEditingController();
   final sideWear = TextEditingController();
   String? railType;
+  double? headResult;
+  double? sideResult;
 
   static const railTypes = <String>[
     '60E1 / 60E2 plain line',
@@ -65,123 +65,226 @@ class _RailWearHomeState extends State<RailWearHome> {
   }
 
   void calculate() {
-    final vertical = double.tryParse(headWear.text);
+    final head = double.tryParse(headWear.text);
     final side = double.tryParse(sideWear.text);
-
-    if (railType == null || vertical == null || side == null) {
-      _show('Please select the rail type and enter both wear readings.');
+    if (railType == null || head == null || side == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Select the rail type and enter both wear readings.'),
+      ));
       return;
     }
-
-    _show(
-      'Rail type: $railType\n'
-      'Head wear: ${vertical.toStringAsFixed(1)} mm\n'
-      'Side wear: ${side.toStringAsFixed(1)} mm\n\n'
-      'Head wear and side wear recorded.\n\n'
-      'MAXIMUM GRIND AVAILABLE: awaiting verified limit data for $railType.\n\n'
-      'The app will show either a maximum grind in mm or DO NOT GRIND once the controlled rail limits are loaded.',
-    );
+    setState(() {
+      headResult = head;
+      sideResult = side;
+    });
   }
 
-  void _show(String message) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Rail Wear Result'),
-        content: Text(message, style: const TextStyle(fontSize: 18)),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+  InputDecoration fieldDecoration(String hint) => InputDecoration(
+    hintText: hint,
+    suffixText: 'mm',
+    filled: true,
+    fillColor: const Color(0xFF07121A),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Color(0xFF52738A)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: gold, width: 2),
+    ),
+  );
+
+  Widget measurementCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required TextEditingController controller,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: panel,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: border),
       ),
+      child: Row(children: [
+        SizedBox(width: 56, child: Icon(icon, size: 38, color: Colors.white70)),
+        const SizedBox(width: 10),
+        Expanded(
+          flex: 5,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+            Text(subtitle, style: const TextStyle(color: Color(0xFFAAC4D8))),
+          ]),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          flex: 5,
+          child: TextField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            decoration: fieldDecoration('0.0'),
+          ),
+        ),
+      ]),
     );
   }
+
+  Widget infoTile(IconData icon, String label, String value) => Expanded(
+    child: Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A1720),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border),
+      ),
+      child: Column(children: [
+        Icon(icon, color: Colors.white70),
+        const SizedBox(height: 7),
+        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFB9CBD8), fontSize: 12)),
+        const SizedBox(height: 5),
+        Text(value, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      ]),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
+    final hasResult = headResult != null && sideResult != null && railType != null;
+    final totalWear = hasResult ? headResult! + sideResult! : 0.0;
+    final sideOk = !hasResult || sideResult! < 9.0;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Rail Wear Calculator',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 18),
-            child: Center(
-              child: Text(
-                'Think Atlas',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
           children: [
-            const Text(
-              'RAIL WEAR',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text.rich(TextSpan(children: [
+                    TextSpan(text: 'Rail Wear ', style: TextStyle(color: gold)),
+                    TextSpan(text: 'Calculator'),
+                  ]), style: TextStyle(fontSize: 32, fontWeight: FontWeight.w800)),
+                  SizedBox(height: 4),
+                  Text('UK RAIL STANDARDS • RULE OF 9',
+                    style: TextStyle(letterSpacing: 2.2, color: Color(0xFFB8C9D7), fontWeight: FontWeight.w600)),
+                ]),
+              ),
+              const SizedBox(width: 12),
+              const Text.rich(TextSpan(children: [
+                TextSpan(text: 'Think ', style: TextStyle(color: Colors.white)),
+                TextSpan(text: 'Atlas', style: TextStyle(color: gold)),
+              ]), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+            ]),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: border)),
+              child: Row(children: [
+                const SizedBox(width: 56, child: Icon(Icons.railway_alert, size: 38, color: Colors.white70)),
+                const SizedBox(width: 10),
+                const Expanded(flex: 4, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('Rail type', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+                  Text('Select the rail type', style: TextStyle(color: Color(0xFFAAC4D8))),
+                ])),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 6,
+                  child: DropdownButtonFormField<String>(
+                    value: railType,
+                    isExpanded: true,
+                    decoration: fieldDecoration('').copyWith(suffixText: null),
+                    items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
+                    onChanged: (value) => setState(() { railType = value; headResult = null; sideResult = null; }),
+                  ),
+                ),
+              ]),
             ),
+            const SizedBox(height: 10),
+            measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'Side wear (mm)', subtitle: 'Lateral wear depth', controller: sideWear),
             const SizedBox(height: 8),
-            const Text(
-              'Select the rail type and enter the two measured wear readings.',
-              style: TextStyle(fontSize: 17),
-            ),
-            const SizedBox(height: 24),
-            DropdownButtonFormField<String>(
-              value: railType,
-              decoration: const InputDecoration(labelText: 'Rail type'),
-              items: railTypes
-                  .map((type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      ))
-                  .toList(),
-              onChanged: (value) => setState(() => railType = value),
-            ),
-            const SizedBox(height: 18),
-            TextField(
-              controller: headWear,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration:
-                  const InputDecoration(labelText: 'Head wear (mm)'),
-            ),
-            const SizedBox(height: 18),
-            TextField(
-              controller: sideWear,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Side wear (mm)'),
-            ),
-            const SizedBox(height: 28),
             SizedBox(
-              height: 64,
+              height: 66,
               child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: gold,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                ),
                 onPressed: calculate,
-                icon: const Icon(Icons.calculate, size: 28),
-                label: const Text(
-                  'CALCULATE',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                icon: const Icon(Icons.calculate, size: 29),
+                label: const Text('CALCULATE', style: TextStyle(fontSize: 23, fontWeight: FontWeight.w900)),
               ),
             ),
-            const SizedBox(height: 24),
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Result format: MAXIMUM GRIND AVAILABLE: X.X mm, or DO NOT GRIND. '
-                  'Operational grind values remain disabled until the controlled limits for each rail type are verified.',
-                  style: TextStyle(fontSize: 15),
+            if (hasResult) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF071A12),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: sideOk ? const Color(0xFF00D84A) : Colors.redAccent, width: 2),
                 ),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Icon(sideOk ? Icons.check_circle : Icons.warning_rounded,
+                      color: sideOk ? const Color(0xFF00E653) : Colors.redAccent, size: 42),
+                    const SizedBox(width: 12),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(sideOk ? 'RESULT' : 'DO NOT GRIND',
+                        style: TextStyle(color: sideOk ? const Color(0xFF00E653) : Colors.redAccent,
+                          fontWeight: FontWeight.w900, fontSize: 18)),
+                      const SizedBox(height: 3),
+                      Text(sideOk ? 'WEAR READINGS RECORDED' : 'SIDE WEAR LIMIT REACHED',
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
+                    ])),
+                  ]),
+                  const SizedBox(height: 16),
+                  Row(children: [
+                    infoTile(Icons.railway_alert, 'Rail type', railType!),
+                    const SizedBox(width: 8),
+                    infoTile(Icons.straighten, 'Minimum depth', '${minimumDepth[railType]!.toStringAsFixed(0)} mm'),
+                    const SizedBox(width: 8),
+                    infoTile(Icons.settings, 'Current total wear', '${totalWear.toStringAsFixed(1)} mm'),
+                  ]),
+                ]),
               ),
-            ),
+            ],
+            const SizedBox(height: 16),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: border)),
+                child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('⚠  DEFECT GUIDANCE (FAMILY OF 3)', style: TextStyle(fontWeight: FontWeight.w800)),
+                  Divider(),
+                  Text('Wheel burns                         Max 3 mm'),
+                  Divider(),
+                  Text('Squats                                  Max 3 mm'),
+                  Divider(),
+                  Text('Tache ovale                           Max 3 mm'),
+                ]),
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(16), border: Border.all(color: border)),
+                child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text('📖  QUICK REFERENCE', style: TextStyle(fontWeight: FontWeight.w800)),
+                  Divider(),
+                  Text('Rule of 9\nHead wear + side wear'),
+                  Divider(),
+                  Text('Pre-1979 rail\nUltrasonic test required before grinding'),
+                  Divider(),
+                  Text('Side wear limit\n9 mm'),
+                ]),
+              )),
+            ]),
           ],
         ),
       ),
