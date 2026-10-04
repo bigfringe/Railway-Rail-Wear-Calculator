@@ -240,19 +240,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                 ]),
                 const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    width: double.infinity,
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(6),
-                    child: Image.asset(
-                      'assets/nr4_gauge.jpg',
-                      height: 190,
-                      fit: BoxFit.contain,
-                      gaplessPlayback: true,
-                    ),
-                  ),
+                Container(
+                  height: 190,
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: const Color(0xFFE9EDF0), borderRadius: BorderRadius.circular(10)),
+                  child: const CustomPaint(painter: Nr4GaugePainter()),
                 ),
               ]),
             ),
@@ -323,13 +315,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
-              child: const Row(children: [
-                Expanded(child: Column(children: [Icon(Icons.height, color: gold, size: 42), SizedBox(height: 4), Text('Rail depth', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))])),
-                SizedBox(width: 12),
-                Icon(Icons.railway_alert, color: Colors.white70, size: 72),
-                SizedBox(width: 12),
-                Expanded(child: Column(children: [Icon(Icons.compare_arrows, color: gold, size: 42), SizedBox(height: 4), Text('Sidewear', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))])),
-              ]),
+              child: const SizedBox(height: 190, width: double.infinity, child: CustomPaint(painter: RailProfilePainter())),
             ),
             const SizedBox(height: 14),
             const Text('RAIL DEPTH & SIDEWEAR', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
@@ -394,4 +380,50 @@ class _FlashingWarningState extends State<FlashingWarning> with SingleTickerProv
     child: Text(widget.text, textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.redAccent)),
   );
+}
+
+
+class Nr4GaugePainter extends CustomPainter {
+  const Nr4GaugePainter();
+  @override
+  void paint(Canvas canvas, Size size) {
+    final metal = Paint()..color = const Color(0xFFB8BDC1)..style = PaintingStyle.fill;
+    final edge = Paint()..color = const Color(0xFF42484D)..style = PaintingStyle.stroke..strokeWidth = 3;
+    final ink = Paint()..color = const Color(0xFF202428)..strokeWidth = 2;
+    final body = Path()
+      ..moveTo(size.width*.10,size.height*.25)..lineTo(size.width*.42,size.height*.25)
+      ..quadraticBezierTo(size.width*.47,size.height*.25,size.width*.49,size.height*.38)
+      ..lineTo(size.width*.53,size.height*.70)..lineTo(size.width*.32,size.height*.78)
+      ..lineTo(size.width*.27,size.height*.50)..lineTo(size.width*.10,size.height*.50)..close();
+    canvas.drawPath(body, metal); canvas.drawPath(body, edge);
+    final bar=RRect.fromRectAndRadius(Rect.fromLTWH(size.width*.48,size.height*.36,size.width*.43,size.height*.20),const Radius.circular(4));
+    canvas.drawRRect(bar,metal); canvas.drawRRect(bar,edge);
+    for(int i=0;i<10;i++){final x=size.width*(.51+i*.041); canvas.drawLine(Offset(x,size.height*.37),Offset(x,size.height*(i.isEven?.47:.44)),ink);}
+    final tp=TextPainter(textDirection:TextDirection.ltr,textAlign:TextAlign.center);
+    tp.text=const TextSpan(text:'NR4',style:TextStyle(color:Color(0xFF202428),fontSize:22,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.20,size.height*.33));
+    tp.text=const TextSpan(text:'STEPPED SIDEWEAR GAUGE',style:TextStyle(color:Color(0xFF202428),fontSize:11,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.56,size.height*.62));
+  }
+  @override bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
+}
+
+class RailProfilePainter extends CustomPainter {
+  const RailProfilePainter();
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rail=Paint()..color=const Color(0xFFB8BDC1);
+    final line=Paint()..color=const Color(0xFFFFC928)..strokeWidth=4..strokeCap=StrokeCap.round;
+    final cx=size.width*.5;
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-62,22,124,34),const Radius.circular(14)),rail);
+    canvas.drawRect(Rect.fromLTWH(cx-17,52,34,82),rail);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-72,130,144,30),const Radius.circular(8)),rail);
+    canvas.drawLine(Offset(cx-100,24),Offset(cx-100,158),line);
+    canvas.drawLine(Offset(cx-108,34),Offset(cx-100,24),line);canvas.drawLine(Offset(cx-92,34),Offset(cx-100,24),line);
+    canvas.drawLine(Offset(cx-108,148),Offset(cx-100,158),line);canvas.drawLine(Offset(cx-92,148),Offset(cx-100,158),line);
+    canvas.drawLine(Offset(cx+65,39),Offset(cx+145,39),line);
+    canvas.drawLine(Offset(cx+135,31),Offset(cx+145,39),line);canvas.drawLine(Offset(cx+135,47),Offset(cx+145,39),line);
+    final tp=TextPainter(textDirection:TextDirection.ltr);
+    tp.text=const TextSpan(text:'Rail depth',style:TextStyle(color:Colors.white,fontSize:16,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(8,82));
+    tp.text=const TextSpan(text:'Sidewear',style:TextStyle(color:Colors.white,fontSize:16,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(cx+82,55));
+  }
+  @override bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
 }
