@@ -226,26 +226,31 @@ class _RailWearHomeState extends State<RailWearHome> {
             measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Step-gauge reading', controller: sideWear),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
-              clipBehavior: Clip.antiAlias,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: border)),
-              child: Row(children: [
-                const Expanded(
-                  flex: 3,
-                  child: Text('NR4 STEPPED\nSIDEWEAR GAUGE',
-                    style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w900, fontSize: 15)),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 7,
-                  child: SizedBox(
-                    height: 150,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: panel,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: border),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Row(children: [
+                  Icon(Icons.straighten, color: gold, size: 24),
+                  SizedBox(width: 10),
+                  Text('NR4 STEPPED SIDEWEAR GAUGE',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                ]),
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    width: double.infinity,
+                    color: Color(0xFF101820),
+                    padding: const EdgeInsets.all(8),
                     child: Image.asset(
                       'assets/nr4_gauge.jpg',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Center(
-                        child: Icon(Icons.straighten, color: Colors.black54, size: 52),
-                      ),
+                      height: 120,
+                      fit: BoxFit.contain,
+                      gaplessPlayback: true,
                     ),
                   ),
                 ),
