@@ -387,7 +387,7 @@ class Nr4GaugePainter extends CustomPainter {
   const Nr4GaugePainter();
   @override
   void paint(Canvas canvas, Size size) {
-    final metal = Paint()..color = const Color(0xFFB8BDC1)..style = PaintingStyle.fill;
+    final metal = Paint()..shader = const LinearGradient(colors: [Color(0xFFE1E5E7), Color(0xFF92999E), Color(0xFFCDD2D5)]).createShader(Offset.zero & size)..style = PaintingStyle.fill;
     final edge = Paint()..color = const Color(0xFF42484D)..style = PaintingStyle.stroke..strokeWidth = 3;
     final ink = Paint()..color = const Color(0xFF202428)..strokeWidth = 2;
     final body = Path()
@@ -395,13 +395,13 @@ class Nr4GaugePainter extends CustomPainter {
       ..quadraticBezierTo(size.width*.47,size.height*.25,size.width*.49,size.height*.38)
       ..lineTo(size.width*.53,size.height*.70)..lineTo(size.width*.32,size.height*.78)
       ..lineTo(size.width*.27,size.height*.50)..lineTo(size.width*.10,size.height*.50)..close();
-    canvas.drawPath(body, metal); canvas.drawPath(body, edge);
+    canvas.drawShadow(body, Colors.black, 5, false); canvas.drawPath(body, metal); canvas.drawPath(body, edge); canvas.drawCircle(Offset(size.width*.19,size.height*.38), size.height*.055, Paint()..color=const Color(0xFF6C7479)); canvas.drawCircle(Offset(size.width*.19,size.height*.38), size.height*.055, edge);
     final bar=RRect.fromRectAndRadius(Rect.fromLTWH(size.width*.48,size.height*.36,size.width*.43,size.height*.20),const Radius.circular(4));
-    canvas.drawRRect(bar,metal); canvas.drawRRect(bar,edge);
+    canvas.drawShadow(Path()..addRRect(bar), Colors.black, 3, false); canvas.drawRRect(bar,metal); canvas.drawRRect(bar,edge);
     for(int i=0;i<10;i++){final x=size.width*(.51+i*.041); canvas.drawLine(Offset(x,size.height*.37),Offset(x,size.height*(i.isEven ? .47 : .44)),ink);}
     final tp=TextPainter(textDirection:TextDirection.ltr,textAlign:TextAlign.center);
-    tp.text=const TextSpan(text:'NR4',style:TextStyle(color:Color(0xFF202428),fontSize:22,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.20,size.height*.33));
-    tp.text=const TextSpan(text:'STEPPED SIDEWEAR GAUGE',style:TextStyle(color:Color(0xFF202428),fontSize:11,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.56,size.height*.62));
+    tp.text=const TextSpan(text:'NR4-ABT-1004-0001',style:TextStyle(color:Color(0xFF202428),fontSize:12,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.18,size.height*.32));
+    tp.text=const TextSpan(text:'SIDE WEAR  •  STEPPED GAUGE',style:TextStyle(color:Color(0xFF202428),fontSize:11,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(size.width*.56,size.height*.62));
   }
   @override bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
 }
