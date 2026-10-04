@@ -223,7 +223,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             ),
             const SizedBox(height: 10),
             measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
-            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear reading', subtitle: 'NR4 step gauge reading (S)', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Sidewear step-gauge reading', controller: sideWear),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
@@ -249,7 +249,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ),
               ]),
             ),
-            measurementCard(icon: Icons.height, title: 'Rail depth', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
+            measurementCard(icon: Icons.height, title: 'Measured Rail Depth (mm)', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
             const SizedBox(height: 8),
             SizedBox(
               height: 60,
@@ -261,7 +261,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ),
                 onPressed: calculate,
                 icon: const Icon(Icons.calculate, size: 29),
-                label: const Text('CALCULATE SAFE LIMIT', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: .4)),
+                label: const Text('CALCULATE', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: .4)),
               ),
             ),
             if (hasResult) ...[
