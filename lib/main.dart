@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() => runApp(const RailWearApp());
 
@@ -33,6 +34,7 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   final sideWear = TextEditingController();
   final measuredDepth = TextEditingController();
+  final AudioPlayer _hornPlayer = AudioPlayer();
   String? railType;
   double? sideResult;
   double? depthResult;
@@ -71,6 +73,7 @@ class _RailWearHomeState extends State<RailWearHome> {
   void dispose() {
     sideWear.dispose();
     measuredDepth.dispose();
+    _hornPlayer.dispose();
     super.dispose();
   }
 
@@ -93,6 +96,16 @@ class _RailWearHomeState extends State<RailWearHome> {
       sideResult = side;
       depthResult = depth;
     });
+    _playTrainHorn();
+  }
+
+  Future<void> _playTrainHorn() async {
+    try {
+      await _hornPlayer.stop();
+      await _hornPlayer.play(AssetSource('train-horn-2 (1).mp3'));
+    } catch (_) {
+      // Keep the calculation usable even if audio playback fails.
+    }
   }
 
   InputDecoration fieldDecoration(String hint) => InputDecoration(
