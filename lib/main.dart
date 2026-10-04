@@ -118,10 +118,12 @@ class _RailWearHomeState extends State<RailWearHome> {
     });
     final lateralLoss = 9.0 - (0.5 * side);
     final adjustedMinimum = selectedMinimumDepth + lateralLoss;
-    if (depth > adjustedMinimum) {
-      _playTrainHorn();
-    } else {
+    final rawGrindAvailable = depth - adjustedMinimum;
+    final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
+    if (grindAvailable <= 0) {
       _playFailHorn();
+    } else {
+      _playTrainHorn();
     }
   }
 
