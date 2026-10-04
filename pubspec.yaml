@@ -7,6 +7,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  audioplayers: ^6.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -17,3 +18,4 @@ flutter:
     - assets/nr4_gauge.jpg
     - assets/nr4_reference-1.jpg
     - assets/rail_reference.jpg
+    - assets/sounds/train_horn.mp3
