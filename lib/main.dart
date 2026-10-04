@@ -47,6 +47,16 @@ class _RailWearHomeState extends State<RailWearHome> {
     '85 BH',
   ];
 
+  static const railTypeDisplay = <String, String>{
+    '60E1 / 60E2 plain line': '60E1 / 60E2 plain line  •  Min 158 mm  •  Sideworn 158 + L',
+    '60E1 / 60E2 S&C': '60E1 / 60E2 S&C  •  Min 162 mm  •  Sideworn 162 + L',
+    '56E1 / 113A': '56E1 / 113A  •  Min 145 mm  •  Sideworn 145 + L',
+    '109 / 110A': '109 / 110A  •  Min 145 mm  •  Sideworn 145 + L',
+    '98 FB': '98 FB  •  Min 131 mm  •  Sideworn 131 + L',
+    '95 / 97.5 BH': '95 / 97.5 BH  •  Min 131 mm  •  Sideworn 131 + L',
+    '85 BH': '85 BH  •  Min 127 mm  •  Sideworn 127 + L',
+  };
+
   static const minimumDepth = <String, double>{
     '60E1 / 60E2 plain line': 158,
     '60E1 / 60E2 S&C': 162,
@@ -216,7 +226,10 @@ class _RailWearHomeState extends State<RailWearHome> {
                       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF52738A))),
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: gold, width: 2)),
                     ),
-                    items: railTypes.map((type) => DropdownMenuItem(value: type, child: Text(type))).toList(),
+                    items: railTypes.map((type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 13)),
+                    )).toList(),
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
                 ),
