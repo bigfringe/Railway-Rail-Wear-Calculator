@@ -104,11 +104,11 @@ class _RailWearHomeState extends State<RailWearHome> {
     }
     final selectedFullDepth = fullDepth[railType]!;
     final selectedMinimumDepth = minimumDepth[railType]!;
-    if (depth > selectedFullDepth || depth < selectedMinimumDepth) {
+    if (depth > selectedFullDepth) {
       setState(() { sideResult = null; depthResult = null; });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red.shade800,
-        content: Text('INVALID RAIL DEPTH — valid range for $railType is ${selectedMinimumDepth.toStringAsFixed(2)} to ${selectedFullDepth.toStringAsFixed(2)} mm. Check measurement.'),
+        content: Text('INVALID RAIL DEPTH — $railType cannot exceed ${selectedFullDepth.toStringAsFixed(2)} mm. Check rail type and measurement.'),
       ));
       return;
     }
