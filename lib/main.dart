@@ -59,6 +59,16 @@ class _RailWearHomeState extends State<RailWearHome> {
     '85 BH': '85 BH RAIL\nFull rail depth: 138.91 mm\nMinimum rail depth: 127.00 mm\nDifference: 11.91 mm',
   };
 
+  static const fullDepth = <String, double>{
+    '60E1 / 60E2 plain line': 172.00,
+    '60E1 / 60E2 S&C': 172.00,
+    '56E1 / 113A': 158.75,
+    '109 / 110A': 158.75,
+    '98 FB': 142.88,
+    '95 / 97.5 BH': 145.26,
+    '85 BH': 138.91,
+  };
+
   static const minimumDepth = <String, double>{
     '60E1 / 60E2 plain line': 158,
     '60E1 / 60E2 S&C': 162,
@@ -89,6 +99,16 @@ class _RailWearHomeState extends State<RailWearHome> {
     if (side < 0 || side > 18 || depth <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Check the measurements entered.'),
+      ));
+      return;
+    }
+    final selectedFullDepth = fullDepth[railType]!;
+    final selectedMinimumDepth = minimumDepth[railType]!;
+    if (depth > selectedFullDepth || depth < selectedMinimumDepth) {
+      setState(() { sideResult = null; depthResult = null; });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red.shade800,
+        content: Text('INVALID RAIL DEPTH — valid range for $railType is ${selectedMinimumDepth.toStringAsFixed(2)} to ${selectedFullDepth.toStringAsFixed(2)} mm. Check measurement.'),
       ));
       return;
     }
