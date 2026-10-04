@@ -48,13 +48,13 @@ class _RailWearHomeState extends State<RailWearHome> {
   ];
 
   static const railTypeDisplay = <String, String>{
-    '60E1 / 60E2 plain line': '60E1 / 60E2 plain line\nFull rail depth: 172.00 mm   •   Minimum rail depth: 158.00 mm   •   Difference: 14.00 mm',
-    '60E1 / 60E2 S&C': '60E1 / 60E2 S&C\nFull rail depth: 172.00 mm   •   Minimum rail depth: 162.00 mm   •   Difference: 10.00 mm',
-    '56E1 / 113A': '56E1 / 113A Rail\nFull rail depth: 158.75 mm   •   Minimum rail depth: 145.00 mm   •   Difference: 13.75 mm',
-    '109 / 110A': '109 / 110A Rail\nFull rail depth: 158.75 mm   •   Minimum rail depth: 145.00 mm   •   Difference: 13.75 mm',
-    '98 FB': '98 FB Rail\nFull rail depth: 142.88 mm   •   Minimum rail depth: 131.00 mm   •   Difference: 11.88 mm',
-    '95 / 97.5 BH': '95 / 97.5 BH Rail\nFull rail depth: ≈145.26 mm   •   Minimum rail depth: 131.00 mm   •   Difference: ≈14.26 mm',
-    '85 BH': '85 BH Rail\nFull rail depth: 138.91 mm   •   Minimum rail depth: 127.00 mm   •   Difference: 11.91 mm',
+    '60E1 / 60E2 plain line': '60E1 / 60E2 PLAIN LINE RAIL\nFull rail depth: 172.00 mm\nMinimum rail depth: 158.00 mm\nDifference: 14.00 mm',
+    '60E1 / 60E2 S&C': '60E1 / 60E2 S&C RAIL\nFull rail depth: 172.00 mm\nMinimum rail depth: 162.00 mm\nDifference: 10.00 mm',
+    '56E1 / 113A': '56E1 / 113A RAIL\nFull rail depth: 158.75 mm\nMinimum rail depth: 145.00 mm\nDifference: 13.75 mm',
+    '109 / 110A': '109 / 110A RAIL\nFull rail depth: 158.75 mm\nMinimum rail depth: 145.00 mm\nDifference: 13.75 mm',
+    '98 FB': '98 FB RAIL\nFull rail depth: 142.88 mm\nMinimum rail depth: 131.00 mm\nDifference: 11.88 mm',
+    '95 / 97.5 BH': '95 / 97.5 BH RAIL\nFull rail depth: ≈145.26 mm\nMinimum rail depth: 131.00 mm\nDifference: ≈14.26 mm',
+    '85 BH': '85 BH RAIL\nFull rail depth: 138.91 mm\nMinimum rail depth: 127.00 mm\nDifference: 11.91 mm',
   };
 
   static const minimumDepth = <String, double>{
@@ -228,7 +228,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                     ),
                     items: railTypes.map((type) => DropdownMenuItem(
                       value: type,
-                      child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12), maxLines: 2),
+                      child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12), maxLines: 4),
                     )).toList(),
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
