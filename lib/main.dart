@@ -316,10 +316,23 @@ class _RailWearHomeState extends State<RailWearHome> {
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
               decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
-              child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('MEASUREMENT REFERENCE', style: TextStyle(color: gold, fontSize: 12, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
-                SizedBox(height: 10),
-                SizedBox(height: 170, width: double.infinity, child: CustomPaint(painter: RailProfilePainter())),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('REAL RAIL REFERENCE', style: TextStyle(color: gold, fontSize: 12, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    height: 210,
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: Image.asset('assets/rail_reference.jpg', fit: BoxFit.contain),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                  Row(children:[Icon(Icons.height, color: gold, size: 18), SizedBox(width:6), Text('Rail depth', style: TextStyle(fontWeight: FontWeight.w700))]),
+                  Row(children:[Icon(Icons.compare_arrows, color: gold, size: 18), SizedBox(width:6), Text('Sidewear', style: TextStyle(fontWeight: FontWeight.w700))]),
+                ]),
               ]),
             ),
             const SizedBox(height: 14),
