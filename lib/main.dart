@@ -33,7 +33,7 @@ class RailWearHome extends StatefulWidget {
 }
 
 class _RailWearHomeState extends State<RailWearHome> {
-  final verticalWear = TextEditingController();
+  final headWear = TextEditingController();
   final sideWear = TextEditingController();
   String? railType;
 
@@ -48,13 +48,13 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   @override
   void dispose() {
-    verticalWear.dispose();
+    headWear.dispose();
     sideWear.dispose();
     super.dispose();
   }
 
   void calculate() {
-    final vertical = double.tryParse(verticalWear.text);
+    final vertical = double.tryParse(headWear.text);
     final side = double.tryParse(sideWear.text);
 
     if (railType == null || vertical == null || side == null) {
@@ -64,10 +64,11 @@ class _RailWearHomeState extends State<RailWearHome> {
 
     _show(
       'Rail type: $railType\n'
-      'Vertical wear: ${vertical.toStringAsFixed(1)} mm\n'
+      'Head wear: ${vertical.toStringAsFixed(1)} mm\n'
       'Side wear: ${side.toStringAsFixed(1)} mm\n\n'
-      'Measurements recorded. The final permissible-wear result will be enabled '
-      'only after the applicable controlled limits for this rail type are verified.',
+      'Head wear and side wear recorded.\n\n'
+      'MAXIMUM GRIND AVAILABLE: awaiting verified limit data for $railType.\n\n'
+      'The app will show either a maximum grind in mm or DO NOT GRIND once the controlled rail limits are loaded.',
     );
   }
 
@@ -134,11 +135,11 @@ class _RailWearHomeState extends State<RailWearHome> {
             ),
             const SizedBox(height: 18),
             TextField(
-              controller: verticalWear,
+              controller: headWear,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration:
-                  const InputDecoration(labelText: 'Vertical wear (mm)'),
+                  const InputDecoration(labelText: 'Head wear (mm)'),
             ),
             const SizedBox(height: 18),
             TextField(
@@ -164,9 +165,8 @@ class _RailWearHomeState extends State<RailWearHome> {
               child: Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  'Prototype: measurement entry is active. Safety-critical '
-                  'permissible wear and grinding limits will only be activated '
-                  'from verified controlled railway data.',
+                  'Result format: MAXIMUM GRIND AVAILABLE: X.X mm, or DO NOT GRIND. '
+                  'Operational grind values remain disabled until the controlled limits for each rail type are verified.',
                   style: TextStyle(fontSize: 15),
                 ),
               ),
