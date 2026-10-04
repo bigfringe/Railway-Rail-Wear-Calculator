@@ -44,7 +44,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final sidewear = TextEditingController();
   final nr4Step = TextEditingController();
   bool nearFishplate = false;
-  bool pre1979 = false;
+  bool pre1976 = false;
+  String speedBand = 'Up to 80 mph';
 
   @override
   void dispose() { depth.dispose(); sidewear.dispose(); nr4Step.dispose(); super.dispose(); }
@@ -60,13 +61,21 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if ((lateralLoss - ruleOf9Loss).abs() > 0.25) {
       return showResult('CHECK READINGS: NR4 step reading gives L = 9 - 0.5S = \${ruleOf9Loss.toStringAsFixed(1)} mm, but entered lateral head loss is \${lateralLoss.toStringAsFixed(1)} mm. Recheck the measurements before continuing.');
     }
-    if (pre1979) {
-      return showResult('STOP: pre-1979 rail selected. Ultrasonic-test requirement must be satisfied before any grinding/reprofiling decision.');
+    if (pre1976) {
+      return showResult('STOP: pre-1976 rail selected. U8 or equivalent approved ultrasonic testing must confirm no actionable internal defects before specific surface grinding or milling for surface damage.');
     }
     final requiredDepth = rail!.minimumDepth + (nearFishplate ? lateralLoss : 0);
     final margin = measured - requiredDepth;
+    String sidewearAction;
+    if (speedBand == 'Over 80 to 125 mph' && lateralLoss >= 9) {
+      sidewearAction = 'SIDEWEAR LIMIT REACHED: legacy mod09 specifies an 80 mph ESR and rail replacement/transpose action.';
+    } else if (speedBand == 'Up to 80 mph' && lateralLoss >= 9) {
+      sidewearAction = 'SIDEWEAR LIMIT REACHED: legacy mod09 specifies replacement or transposition.';
+    } else {
+      sidewearAction = 'Sidewear is below the 9 mm legacy limit for the selected speed band.';
+    }
     final status = margin < 0 ? 'BELOW BASELINE DEPTH' : 'BASELINE DEPTH CHECK PASSED';
-    showResult('$status\n\nRequired depth: ${requiredDepth.toStringAsFixed(1)} mm\nMeasured depth: ${measured.toStringAsFixed(1)} mm\nMargin: ${margin.toStringAsFixed(1)} mm\n\nThis is a GB compatibility depth check only. Rule-of-9 measurement consistency is checked using L = 9 - 0.5S. Grinding allowance remains separate and locked until its operational limits are verified.');
+    showResult('$status\n\n$sidewearAction\n\nRequired depth: ${requiredDepth.toStringAsFixed(1)} mm\nMeasured depth: ${measured.toStringAsFixed(1)} mm\nMargin: ${margin.toStringAsFixed(1)} mm\n\nThis is a GB compatibility depth check only. Rule-of-9 measurement consistency is checked using L = 9 - 0.5S. Grinding allowance remains separate and locked until its operational limits are verified.');
   }
 
   void showResult(String text) => showDialog<void>(
@@ -111,9 +120,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           title: const Text('Rail manufactured before 1979'),
-          subtitle: const Text('Ultrasonic-test warning'),
-          value: pre1979,
-          onChanged: (v) => setState(() => pre1979 = v),
+          subtitle: const Text('U8 or equivalent approved ultrasonic test required before specific surface grinding/reprofiling'),
+          value: pre1976,
+          onChanged: (v) => setState(() => pre1976 = v),
         ),
         const SizedBox(height: 18),
         SizedBox(height: 58, child: FilledButton.icon(onPressed: calculate, icon: const Icon(Icons.calculate), label: const Text('CALCULATE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))),
