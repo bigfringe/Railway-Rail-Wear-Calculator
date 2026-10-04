@@ -223,7 +223,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             ),
             const SizedBox(height: 10),
             measurementCard(icon: Icons.height, title: 'Head wear (mm)', subtitle: 'Vertical wear depth', controller: headWear),
-            measurementCard(icon: Icons.compare_arrows, title: 'NR4 Step Reading (S)', subtitle: 'Step-gauge reading', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear reading', subtitle: 'NR4 step gauge reading (S)', controller: sideWear),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
@@ -256,7 +256,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ),
               ]),
             ),
-            measurementCard(icon: Icons.straighten, title: 'Measured Rail Depth (mm)', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
+            measurementCard(icon: Icons.height, title: 'Rail depth', subtitle: 'Actual remaining rail depth', controller: measuredDepth),
             const SizedBox(height: 8),
             SizedBox(
               height: 66,
@@ -320,20 +320,19 @@ class _RailWearHomeState extends State<RailWearHome> {
               ),
             ],
             const SizedBox(height: 18),
-            const Text('REFERENCE', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
+            const Text('RAIL DEPTH & SIDEWEAR', style: TextStyle(color: gold, fontSize: 13, letterSpacing: 1.8, fontWeight: FontWeight.w800)),
             const SizedBox(height: 8),
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('⚠  DEFECT GUIDANCE (FAMILY OF 3)', style: TextStyle(fontWeight: FontWeight.w800)),
+                  Text('⚠  DEFECT GUIDANCE', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
                   Text('Wheel burns                         Max 3 mm'),
                   Divider(),
                   Text('Squats                                  Max 3 mm'),
-                  Divider(),
-                  Text('Tache ovale                           Max 3 mm'),
+
                 ]),
               )),
               const SizedBox(width: 10),
