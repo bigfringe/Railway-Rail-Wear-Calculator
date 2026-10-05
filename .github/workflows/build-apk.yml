@@ -16,6 +16,10 @@ jobs:
           channel: stable
       - name: Generate Android project files
         run: flutter create --platforms=android --project-name railway_rail_wear_calculator .
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
       - name: Convert low fail horn to Android-safe MP3
         run: |
           ffmpeg -y -i "assets/TRNHorn_Train horn 3 (ID 2847)_BigSoundBank.com (1).wav" -codec:a libmp3lame -b:a 192k "assets/low-fail-horn.mp3"
