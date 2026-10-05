@@ -139,7 +139,7 @@ class _RailWearHomeState extends State<RailWearHome> {
   Future<void> _playFailHorn() async {
     try {
       await _hornPlayer.stop();
-      await _hornPlayer.play(AssetSource('TRNHorn_Train horn 3 (ID 2847)_BigSoundBank.com (1).wav'));
+      await _hornPlayer.play(AssetSource('low-fail-horn.mp3'));
     } catch (_) {
       // Keep the calculation usable even if audio playback fails.
     }
