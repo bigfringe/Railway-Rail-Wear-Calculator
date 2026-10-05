@@ -224,8 +224,9 @@ class _RailWearHomeState extends State<RailWearHome> {
     final sidewornMinDepth = hasResult ? minimumDepth[railType]! + lateralLoss : 0.0;
     final rawGrindAvailable = hasResult ? depthResult! - sidewornMinDepth : 0.0;
     final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
-    final lowAllowance = hasResult && grindAvailable > 0 && grindAvailable < 5;
-    final limitReached = hasResult && grindAvailable <= 0;
+    // Exactly 1 mm or more remaining is GREEN / grind permitted.
+    // Anything below 1 mm floors to 0 and is RED / do not grind.
+    final limitReached = hasResult && grindAvailable < 1;
     final sideOk = !limitReached;
 
     return Scaffold(
@@ -363,11 +364,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                     decoration: BoxDecoration(
-                      color: (lowAllowance || limitReached) ? const Color(0xFF3A0909) : const Color(0xFF0A2A17),
+                      color: limitReached ? const Color(0xFF3A0909) : const Color(0xFF0A2A17),
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: (lowAllowance || limitReached) ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
+                      border: Border.all(color: limitReached ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
                     ),
-                    child: (lowAllowance || limitReached)
+                    child: limitReached
                       ? FlashingWarning(text: limitReached ? 'DO NOT GRIND — LIMIT REACHED' : 'DO NOT GRIND MORE THAN: $grindAvailable mm')
                       : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
