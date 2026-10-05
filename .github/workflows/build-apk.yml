@@ -25,6 +25,10 @@ jobs:
           ffmpeg -y -i "assets/TRNHorn_Train horn 3 (ID 2847)_BigSoundBank.com (1).wav" -codec:a libmp3lame -b:a 192k "assets/low-fail-horn.mp3"
       - name: Get dependencies
         run: flutter pub get
+      - name: Generate launcher icons from app icon
+        if: ${{ hashFiles('assets/app_icon.png') != '' }}
+        run: |
+          dart run flutter_launcher_icons
       - name: Build release APK
         run: flutter build apk --release
       - name: Upload APK
