@@ -289,6 +289,15 @@ class _RailWearHomeState extends State<RailWearHome> {
                         child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12, height: 1.25), maxLines: 4),
                       ),
                     )).toList(),
+                    selectedItemBuilder: (context) => railTypes.map((type) => Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        railTypeDisplay[type]!,
+                        style: const TextStyle(fontSize: 12, height: 1.25),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )).toList(),
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
                 ),
