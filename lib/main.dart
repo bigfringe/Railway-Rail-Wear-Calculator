@@ -289,18 +289,34 @@ class _RailWearHomeState extends State<RailWearHome> {
                         child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12, height: 1.25), maxLines: 4),
                       ),
                     )).toList(),
-                    selectedItemBuilder: (context) => railTypes.map((type) => Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text(
-                          railTypeDisplay[type]!,
-                          style: const TextStyle(fontSize: 11, height: 1.15),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                    selectedItemBuilder: (context) => railTypes.map((type) {
+                      final display = railTypeDisplay[type]!;
+                      final parts = display.split('\n');
+                      return Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              parts.first,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, height: 1.0),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 5),
+                            if (parts.length > 1)
+                              Text(
+                                parts.sublist(1).join(' '),
+                                style: const TextStyle(fontSize: 10, height: 1.0),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
                         ),
-                      ),
-                    )).toList(),
+                      );
+                    }).toList(),
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
                 ),
