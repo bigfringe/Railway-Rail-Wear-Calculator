@@ -493,6 +493,36 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ]),
               ),
             ]),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: panel,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: border),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 6, 8, 12),
+                    child: Text('RAIL IDENTIFICATION & BRAND MARKINGS',
+                      style: TextStyle(color: gold, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'a_dark_themed_infographic_table_image_like_a_rail.png',
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: (context, error, stackTrace) =>
+                        const Padding(padding: EdgeInsets.all(20),
+                          child: Text('Rail identification image could not be loaded.')),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
