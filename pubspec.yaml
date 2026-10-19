@@ -21,6 +21,7 @@ flutter:
     - assets/rail_reference.jpg
     - assets/train-horn-2 (1).mp3
     - assets/low-fail-horn.mp3
+    - a_dark_themed_infographic_table_image_like_a_rail.png
 
 flutter_launcher_icons:
   android: true
