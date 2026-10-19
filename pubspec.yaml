@@ -1,7 +1,7 @@
 name: railway_rail_wear_calculator
 description: Railway Rail Wear Calculator prototype
 publish_to: "none"
-version: 0.2.1+62
+version: 0.2.2+63
 environment:
   sdk: ">=3.3.0 <4.0.0"
 dependencies:
@@ -21,7 +21,8 @@ flutter:
     - assets/rail_reference.jpg
     - assets/train-horn-2 (1).mp3
     - assets/low-fail-horn.mp3
-    - a_dark_themed_infographic_table_image_like_a_rail.png
+    - Screenshot_20261019_162726_com_openai_chatgpt_MainActivity_edit_339913075547208.jpg
+    - Screenshot_20261019_162913_com_openai_chatgpt_MainActivity_edit_340030741756382.jpg
 
 flutter_launcher_icons:
   android: true
