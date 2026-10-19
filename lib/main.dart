@@ -506,18 +506,48 @@ class _RailWearHomeState extends State<RailWearHome> {
                 children: [
                   const Padding(
                     padding: EdgeInsets.fromLTRB(8, 6, 8, 12),
+                    child: Text('RAIL SECTION ENGINEERING PROFILES',
+                      style: TextStyle(color: gold, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'Screenshot_20261019_162726_com_openai_chatgpt_MainActivity_edit_339913075547208.jpg',
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: (context, error, stackTrace) =>
+                        const Padding(padding: EdgeInsets.all(20),
+                          child: Text('Reference image could not be loaded.')),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: panel,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: border),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 6, 8, 12),
                     child: Text('RAIL IDENTIFICATION & BRAND MARKINGS',
                       style: TextStyle(color: gold, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      'a_dark_themed_infographic_table_image_like_a_rail.png',
+                      'Screenshot_20261019_162913_com_openai_chatgpt_MainActivity_edit_340030741756382.jpg',
                       width: double.infinity,
                       fit: BoxFit.fitWidth,
                       errorBuilder: (context, error, stackTrace) =>
                         const Padding(padding: EdgeInsets.all(20),
-                          child: Text('Rail identification image could not be loaded.')),
+                          child: Text('Reference image could not be loaded.')),
                     ),
                   ),
                 ],
