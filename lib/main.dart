@@ -163,9 +163,9 @@ class _RailWearHomeState extends State<RailWearHome> {
     }
   }
 
-  InputDecoration fieldDecoration(String hint) => InputDecoration(
+  InputDecoration fieldDecoration(String hint, {String unit = 'mm'}) => InputDecoration(
     hintText: hint,
-    suffixText: 'mm',
+    suffixText: unit,
     filled: true,
     fillColor: const Color(0xFF07121A),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
@@ -184,6 +184,7 @@ class _RailWearHomeState extends State<RailWearHome> {
     required String title,
     required String subtitle,
     required TextEditingController controller,
+    String unit = 'mm',
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -215,7 +216,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             },
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            decoration: fieldDecoration('0.0'),
+            decoration: fieldDecoration('0.0', unit: unit),
           ),
         ),
       ]),
@@ -353,7 +354,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               ]),
             ),
             const SizedBox(height: 10),
-            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear Reading', subtitle: 'Enter the number shown by the NR4 stepped gauge', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear Reading', subtitle: 'Enter the step number shown by the NR4 stepped gauge', controller: sideWear, unit: 'step'),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
