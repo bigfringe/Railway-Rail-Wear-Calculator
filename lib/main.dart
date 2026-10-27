@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
+// NR4 provides a step reading (S), not a direct millimetre measurement.
+// L is the lateral head loss in millimetres.
+double lateralHeadLossFromNr4Step(double step) => 9.0 - (0.5 * step);
+
+// GCRT5021 Issue 6, 3.2.8/Table 19: add lateral head loss to the
+// base minimum when the rail is within 9 metres of a fishplate.
+double minimumDepthForFishplateLocation({
+  required double baseMinimum,
+  required double lateralHeadLoss,
+  required bool withinNineMetresOfFishplate,
+}) => baseMinimum + (withinNineMetresOfFishplate ? lateralHeadLoss : 0.0);
+
 void main() => runApp(const RailWearApp());
 
 class RailWearApp extends StatelessWidget {
@@ -36,6 +48,7 @@ class _RailWearHomeState extends State<RailWearHome> {
   final measuredDepth = TextEditingController();
   final AudioPlayer _hornPlayer = AudioPlayer();
   String? railType;
+  bool? withinNineMetresOfFishplate;
   double? sideResult;
   double? depthResult;
 
@@ -90,9 +103,10 @@ class _RailWearHomeState extends State<RailWearHome> {
   void calculate() {
     final side = double.tryParse(sideWear.text);
     final depth = double.tryParse(measuredDepth.text);
-    if (railType == null || side == null || depth == null) {
+    if (railType == null || side == null || depth == null ||
+        withinNineMetresOfFishplate == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Select the rail type, enter the sidewear reading and actual rail depth.'),
+        content: Text('Select rail type and fishplate distance, then enter the NR4 reading and actual rail depth.'),
       ));
       return;
     }
@@ -116,8 +130,12 @@ class _RailWearHomeState extends State<RailWearHome> {
       sideResult = side;
       depthResult = depth;
     });
-    final lateralLoss = 9.0 - (0.5 * side);
-    final adjustedMinimum = selectedMinimumDepth + lateralLoss;
+    final lateralLoss = lateralHeadLossFromNr4Step(side);
+    final adjustedMinimum = minimumDepthForFishplateLocation(
+      baseMinimum: selectedMinimumDepth,
+      lateralHeadLoss: lateralLoss,
+      withinNineMetresOfFishplate: withinNineMetresOfFishplate!,
+    );
     final rawGrindAvailable = depth - adjustedMinimum;
     final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
     if (grindAvailable <= 0) {
@@ -145,9 +163,9 @@ class _RailWearHomeState extends State<RailWearHome> {
     }
   }
 
-  InputDecoration fieldDecoration(String hint) => InputDecoration(
+  InputDecoration fieldDecoration(String hint, {String unit = 'mm'}) => InputDecoration(
     hintText: hint,
-    suffixText: 'mm',
+    suffixText: unit,
     filled: true,
     fillColor: const Color(0xFF07121A),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
@@ -166,6 +184,7 @@ class _RailWearHomeState extends State<RailWearHome> {
     required String title,
     required String subtitle,
     required TextEditingController controller,
+    String unit = 'mm',
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -190,9 +209,14 @@ class _RailWearHomeState extends State<RailWearHome> {
           flex: 5,
           child: TextField(
             controller: controller,
+            onChanged: (_) {
+              if (sideResult != null || depthResult != null) {
+                setState(() { sideResult = null; depthResult = null; });
+              }
+            },
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-            decoration: fieldDecoration('0.0'),
+            decoration: fieldDecoration('0.0', unit: unit),
           ),
         ),
       ]),
@@ -219,9 +243,16 @@ class _RailWearHomeState extends State<RailWearHome> {
 
   @override
   Widget build(BuildContext context) {
-    final hasResult = sideResult != null && depthResult != null && railType != null;
-    final lateralLoss = hasResult ? 9.0 - (0.5 * sideResult!) : 0.0;
-    final sidewornMinDepth = hasResult ? minimumDepth[railType]! + lateralLoss : 0.0;
+    final hasResult = sideResult != null && depthResult != null &&
+        railType != null && withinNineMetresOfFishplate != null;
+    final lateralLoss = hasResult ? lateralHeadLossFromNr4Step(sideResult!) : 0.0;
+    final sidewornMinDepth = hasResult
+        ? minimumDepthForFishplateLocation(
+            baseMinimum: minimumDepth[railType]!,
+            lateralHeadLoss: lateralLoss,
+            withinNineMetresOfFishplate: withinNineMetresOfFishplate!,
+          )
+        : 0.0;
     final rawGrindAvailable = hasResult ? depthResult! - sidewornMinDepth : 0.0;
     final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
     // Exactly 1 mm or more remaining is GREEN / grind permitted.
@@ -323,7 +354,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               ]),
             ),
             const SizedBox(height: 10),
-            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear Reading', subtitle: 'Enter the number shown by the NR4 stepped gauge', controller: sideWear),
+            measurementCard(icon: Icons.compare_arrows, title: 'Sidewear Reading', subtitle: 'Enter the step number shown by the NR4 stepped gauge', controller: sideWear, unit: 'step'),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
@@ -350,6 +381,58 @@ class _RailWearHomeState extends State<RailWearHome> {
               ]),
             ),
             measurementCard(icon: Icons.height, title: 'Actual Rail Depth', subtitle: 'Enter the total measured rail height', controller: measuredDepth),
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: panel,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: border),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Row(children: [
+                  Icon(Icons.rule, color: gold, size: 26),
+                  SizedBox(width: 10),
+                  Expanded(child: Text(
+                    'Within 9 metres of a fishplate?',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+                  )),
+                ]),
+                const SizedBox(height: 8),
+                const Text(
+                  'Select Yes if the rail is within 9 m of a fishplate, including at 9 m.',
+                  style: TextStyle(color: Color(0xFFAAC4D8)),
+                ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<bool>(
+                  value: withinNineMetresOfFishplate,
+                  isExpanded: true,
+                  hint: const Text('Select Yes or No'),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xFF07121A),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: Color(0xFF52738A)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: gold, width: 2),
+                    ),
+                  ),
+                  items: const [
+                    DropdownMenuItem(value: true, child: Text('YES — within 9 metres')),
+                    DropdownMenuItem(value: false, child: Text('NO — more than 9 metres away')),
+                  ],
+                  onChanged: (value) => setState(() {
+                    withinNineMetresOfFishplate = value;
+                    sideResult = null;
+                    depthResult = null;
+                  }),
+                ),
+              ]),
+            ),
             const SizedBox(height: 8),
             SizedBox(
               height: 60,
@@ -397,9 +480,20 @@ class _RailWearHomeState extends State<RailWearHome> {
                       border: Border.all(color: limitReached ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
                     ),
                     child: limitReached
-                      ? FlashingWarning(text: limitReached ? 'DO NOT GRIND — LIMIT REACHED' : 'DO NOT GRIND MORE THAN: $grindAvailable mm')
+                      ? FlashingWarning(text: 'DO NOT GRIND — LIMIT REACHED')
                       : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
+                  ),
+                  const SizedBox(height: 12),
+                  Text('NR4 lateral head loss: ${lateralLoss.toStringAsFixed(1)} mm'),
+                  Text('Minimum depth used: ${sidewornMinDepth.toStringAsFixed(1)} mm'),
+                  Text(withinNineMetresOfFishplate!
+                      ? 'Fishplate rule: base minimum + lateral head loss'
+                      : 'Fishplate rule: base minimum only (over 9 m away)'),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Calculated rail-depth margin only. Verify the applicable controlled standards and all other grinding restrictions before work.',
+                    style: TextStyle(color: Color(0xFFAAC4D8), fontSize: 12),
                   ),
                 ]),
               ),
@@ -489,7 +583,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Divider(),
                   Text('Pre-1979 rail\nUltrasonic test required before grinding'),
                   Divider(),
-                  Text('Sideworn minimum depth\nBase minimum + L'),
+                  Text('Fishplate distance rule (GCRT5021, Table 19)\nWithin 9 m: base minimum + L\nOver 9 m: base minimum'),
                 ]),
               ),
             ]),

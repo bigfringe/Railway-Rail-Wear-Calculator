@@ -25,6 +25,8 @@ jobs:
           ffmpeg -y -i "assets/TRNHorn_Train horn 3 (ID 2847)_BigSoundBank.com (1).wav" -codec:a libmp3lame -b:a 192k "assets/low-fail-horn.mp3"
       - name: Get dependencies
         run: flutter pub get
+      - name: Test rail wear calculations
+        run: flutter test
       - name: Prepare Rail Wear Calculator app icon
         run: |
           base64 -d assets/app_icon.b64 > assets/app_icon.png
