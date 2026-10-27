@@ -26,7 +26,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Test rail wear calculations
-        run: flutter test
+        # flutter create generates a default test/widget_test.dart referencing MyApp.
+        # Run the project's rail calculation tests, not Flutter's sample test.
+        run: flutter test test/rail_depth_rules_test.dart
       - name: Prepare Rail Wear Calculator app icon
         run: |
           base64 -d assets/app_icon.b64 > assets/app_icon.png
