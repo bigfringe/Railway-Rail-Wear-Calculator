@@ -48,6 +48,7 @@ class _RailWearHomeState extends State<RailWearHome> {
   final measuredDepth = TextEditingController();
   final AudioPlayer _hornPlayer = AudioPlayer();
   String? railType;
+  String? railAge;
   bool? withinNineMetresOfFishplate;
   double? sideResult;
   double? depthResult;
@@ -351,6 +352,36 @@ class _RailWearHomeState extends State<RailWearHome> {
                     onChanged: (value) => setState(() { railType = value; sideResult = null; depthResult = null; }),
                   ),
                 ),
+              ]),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Was the rail manufactured before 1979?',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  value: railAge,
+                  hint: const Text('Select Yes, No or Unknown'),
+                  isExpanded: true,
+                  items: const [
+                    DropdownMenuItem(value: 'yes', child: Text('YES — before 1979')),
+                    DropdownMenuItem(value: 'no', child: Text('NO — 1979 or later')),
+                    DropdownMenuItem(value: 'unknown', child: Text('UNKNOWN')),
+                  ],
+                  onChanged: (value) => setState(() => railAge = value),
+                ),
+                if (railAge == 'yes' || railAge == 'unknown') ...[
+                  const SizedBox(height: 10),
+                  const Row(children: [
+                    Icon(Icons.help_outline, color: gold, size: 28),
+                    SizedBox(width: 10),
+                    Expanded(child: Text('Ultrasonic testing must be confirmed before grinding. This warning does not prevent calculation.',
+                      style: TextStyle(color: gold, fontWeight: FontWeight.w700))),
+                  ]),
+                ],
               ]),
             ),
             const SizedBox(height: 10),
