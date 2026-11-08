@@ -511,7 +511,13 @@ class _RailWearHomeState extends State<RailWearHome> {
                       border: Border.all(color: limitReached ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
                     ),
                     child: limitReached
-                      ? FlashingWarning(text: 'DO NOT GRIND — LIMIT REACHED')
+                      ? Column(mainAxisSize: MainAxisSize.min, children: [
+                          const FlashingWarning(text: 'DO NOT GRIND — LIMIT REACHED'),
+                          const SizedBox(height: 8),
+                          Text('REMAINING: ${rawGrindAvailable.toStringAsFixed(2)} mm',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w900, color: Colors.redAccent)),
+                        ])
                       : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
                   ),
