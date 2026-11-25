@@ -267,12 +267,12 @@ class _RailWearHomeState extends State<RailWearHome> {
                     style: TextStyle(letterSpacing: 2.2, color: Color(0xFFCFDBDE), fontWeight: FontWeight.w600)),
                 ]);
               final eye = Image.asset('assets/think_atlas.gif',
-                  width: 76, height: 50, fit: BoxFit.contain, excludeFromSemantics: true);
+                  width: 152, height: 100, fit: BoxFit.contain, excludeFromSemantics: true);
               const brand = Text.rich(TextSpan(children: [
                 TextSpan(text: 'Think '),
                 TextSpan(text: 'Atlas', style: TextStyle(color: gold)),
               ]), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold));
-              if (bounds.maxWidth < 440 || MediaQuery.textScaleFactorOf(context) > 1.3) {
+              if (bounds.maxWidth < 600 || MediaQuery.textScaleFactorOf(context) > 1.3) {
                 return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   title,
                   Wrap(spacing: 12, crossAxisAlignment: WrapCrossAlignment.center,
@@ -281,7 +281,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               }
               return Row(children: [
                 const Expanded(flex: 6, child: title),
-                Expanded(flex: 2, child: Center(child: eye)),
+                eye,
                 const Expanded(flex: 3, child: Align(alignment: Alignment.centerRight, child: brand)),
               ]);
             }),
