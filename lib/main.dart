@@ -20,12 +20,12 @@ class RailWearApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gold = Color(0xFFFFC928);
+    const gold = Color(0xFFE8BD58);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rail Wear Calculator',
       theme: ThemeData.dark(useMaterial3: true).copyWith(
-        scaffoldBackgroundColor: const Color(0xFF03070A),
+        scaffoldBackgroundColor: const Color(0xFF101010),
         colorScheme: ColorScheme.fromSeed(seedColor: gold, brightness: Brightness.dark),
       ),
       home: const RailWearHome(),
@@ -40,9 +40,9 @@ class RailWearHome extends StatefulWidget {
 }
 
 class _RailWearHomeState extends State<RailWearHome> {
-  static const gold = Color(0xFFFFC928);
-  static const panel = Color(0xFF09141B);
-  static const border = Color(0xFF203A49);
+  static const gold = Color(0xFFE8BD58);
+  static const panel = Color(0xFF242424);
+  static const border = Color(0xFF77736B);
 
   final sideWear = TextEditingController();
   final measuredDepth = TextEditingController();
@@ -168,11 +168,11 @@ class _RailWearHomeState extends State<RailWearHome> {
     hintText: hint,
     suffixText: unit,
     filled: true,
-    fillColor: const Color(0xFF07121A),
+    fillColor: const Color(0xFF101010),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: Color(0xFF52738A)),
+      borderSide: const BorderSide(color: Color(0xFF8C8981)),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
@@ -191,18 +191,18 @@ class _RailWearHomeState extends State<RailWearHome> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: panel,
+        gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: border),
       ),
       child: Row(children: [
-        Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF111F29), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: Icon(icon, size: 27, color: gold)),
+        Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF353535), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: Icon(icon, size: 27, color: gold)),
         const SizedBox(width: 10),
         Expanded(
           flex: 5,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-            Text(subtitle, style: const TextStyle(color: Color(0xFFAAC4D8))),
+            Text(subtitle, style: const TextStyle(color: Color(0xFFD0CFCA))),
           ]),
         ),
         const SizedBox(width: 12),
@@ -216,7 +216,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               }
             },
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
             decoration: fieldDecoration('0.0', unit: unit),
           ),
         ),
@@ -228,14 +228,14 @@ class _RailWearHomeState extends State<RailWearHome> {
     child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0A1720),
+        color: const Color(0xFF242424),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: border),
       ),
       child: Column(children: [
         Icon(icon, color: Colors.white70),
         const SizedBox(height: 7),
-        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFB9CBD8), fontSize: 12)),
+        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFFD0CFCA), fontSize: 12)),
         const SizedBox(height: 5),
         Text(value, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       ]),
@@ -274,26 +274,23 @@ class _RailWearHomeState extends State<RailWearHome> {
                     TextSpan(text: 'Calculator'),
                   ]), style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: -0.7)),
                   SizedBox(height: 4),
-                  Text('UK RAIL STANDARDS • RULE OF 9',
-                    style: TextStyle(letterSpacing: 2.2, color: Color(0xFFB8C9D7), fontWeight: FontWeight.w600)),
+                  Text('PROFESSIONAL RAIL INSPECTION TOOL',
+                    style: TextStyle(letterSpacing: 2.2, color: Color(0xFFD0CFCA), fontWeight: FontWeight.w600)),
                 ]),
               ),
               const SizedBox(width: 12),
-              const Text.rich(TextSpan(children: [
-                TextSpan(text: 'Think ', style: TextStyle(color: Colors.white)),
-                TextSpan(text: 'Atlas', style: TextStyle(color: gold)),
-              ]), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+              const Icon(Icons.train, color: gold, size: 36),
             ]),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+              decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
               child: Row(children: [
-                Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF111F29), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: const Icon(Icons.train, size: 27, color: gold)),
+                Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF353535), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: const Icon(Icons.train, size: 27, color: gold)),
                 const SizedBox(width: 10),
                 const Expanded(flex: 4, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Rail type', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
-                  Text('Select the rail type', style: TextStyle(color: Color(0xFFAAC4D8))),
+                  Text('Select the rail type', style: TextStyle(color: Color(0xFFD0CFCA))),
                 ])),
                 const SizedBox(width: 12),
                 Expanded(
@@ -304,9 +301,9 @@ class _RailWearHomeState extends State<RailWearHome> {
                     decoration: InputDecoration(
                       hintText: 'Select rail type',
                       filled: true,
-                      fillColor: const Color(0xFF07121A),
+                      fillColor: const Color(0xFF101010),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF52738A))),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFF8C8981))),
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: gold, width: 2)),
                     ),
                     menuMaxHeight: 520,
@@ -316,7 +313,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                         margin: const EdgeInsets.symmetric(vertical: 6),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: const BoxDecoration(
-                          border: Border(bottom: BorderSide(color: Color(0xFF203A49))),
+                          border: Border(bottom: BorderSide(color: Color(0xFF77736B))),
                         ),
                         child: Text(railTypeDisplay[type]!, style: const TextStyle(fontSize: 12, height: 1.25), maxLines: 4),
                       ),
@@ -357,7 +354,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+              decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('Was the rail manufactured before 1979?',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
@@ -390,7 +387,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: panel,
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: border),
               ),
@@ -416,7 +413,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: panel,
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: border),
               ),
@@ -432,7 +429,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 const SizedBox(height: 8),
                 const Text(
                   'Select Yes if the rail is within 9 m of a fishplate, including at 9 m.',
-                  style: TextStyle(color: Color(0xFFAAC4D8)),
+                  style: TextStyle(color: Color(0xFFD0CFCA)),
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<bool>(
@@ -441,11 +438,11 @@ class _RailWearHomeState extends State<RailWearHome> {
                   hint: const Text('Select Yes or No'),
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: const Color(0xFF07121A),
+                    fillColor: const Color(0xFF101010),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: Color(0xFF52738A)),
+                      borderSide: const BorderSide(color: Color(0xFF8C8981)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -471,7 +468,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 style: FilledButton.styleFrom(
                   backgroundColor: gold,
                   foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 onPressed: calculate,
                 icon: const Icon(Icons.calculate, size: 29),
@@ -483,13 +480,13 @@ class _RailWearHomeState extends State<RailWearHome> {
               Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF071A12),
+                  color: limitReached ? const Color(0xFF260B0B) : const Color(0xFF071A12),
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(color: sideOk ? const Color(0xFF00D84A) : Colors.redAccent, width: 2),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Icon(sideOk ? Icons.check_circle : Icons.warning_rounded,
+                    Icon(sideOk ? Icons.visibility : Icons.warning_rounded,
                       color: sideOk ? const Color(0xFF00E653) : Colors.redAccent, size: 42),
                     const SizedBox(width: 12),
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -530,7 +527,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   const SizedBox(height: 8),
                   const Text(
                     'Calculated rail-depth margin only. Verify the applicable controlled standards and all other grinding restrictions before work.',
-                    style: TextStyle(color: Color(0xFFAAC4D8), fontSize: 12),
+                    style: TextStyle(color: Color(0xFFD0CFCA), fontSize: 12),
                   ),
                 ]),
               ),
@@ -538,7 +535,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             const SizedBox(height: 14),
             Container(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-              decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+              decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('REAL RAIL REFERENCE', style: TextStyle(color: gold, fontSize: 12, letterSpacing: 1.6, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 10),
@@ -598,7 +595,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+                decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('⚠  DEFECT GUIDANCE', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
@@ -612,7 +609,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(color: panel, borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
+                decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
                 child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('📖  QUICK REFERENCE', style: TextStyle(fontWeight: FontWeight.w800)),
                   Divider(),
@@ -628,7 +625,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: panel,
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: border),
               ),
@@ -658,7 +655,7 @@ class _RailWearHomeState extends State<RailWearHome> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: panel,
+                gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF353535), panel, Color(0xFF171717)]),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: border),
               ),
@@ -745,7 +742,7 @@ class RailProfilePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rail=Paint()..color=const Color(0xFFB8BDC1);
-    final line=Paint()..color=const Color(0xFFFFC928)..strokeWidth=4..strokeCap=StrokeCap.round;
+    final line=Paint()..color=const Color(0xFFE8BD58)..strokeWidth=4..strokeCap=StrokeCap.round;
     final cx=size.width*.5;
     canvas.drawShadow(Path()..addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-62,22,124,34),const Radius.circular(14))), Colors.black, 7, false);
     canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(cx-62,22,124,34),const Radius.circular(14)),rail);
