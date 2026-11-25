@@ -279,7 +279,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                 ]),
               ),
               const SizedBox(width: 12),
-              const Icon(Icons.train, color: gold, size: 36),
+              Image.asset('assets/think_atlas.gif', width: 64, height: 42, semanticLabel: 'Think Atlas'),
             ]),
             const SizedBox(height: 16),
             Container(
