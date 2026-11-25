@@ -266,9 +266,8 @@ class _RailWearHomeState extends State<RailWearHome> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 34),
           children: [
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            LayoutBuilder(builder: (context, bounds) {
+              const title = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text.rich(TextSpan(children: [
                     TextSpan(text: 'Rail Wear ', style: TextStyle(color: gold)),
                     TextSpan(text: 'Calculator'),
@@ -276,11 +275,26 @@ class _RailWearHomeState extends State<RailWearHome> {
                   SizedBox(height: 4),
                   Text('PROFESSIONAL RAIL INSPECTION TOOL',
                     style: TextStyle(letterSpacing: 2.2, color: Color(0xFFD0CFCA), fontWeight: FontWeight.w600)),
-                ]),
-              ),
-              const SizedBox(width: 12),
-              Image.asset('assets/think_atlas.gif', width: 64, height: 42, semanticLabel: 'Think Atlas'),
-            ]),
+                ]);
+              final eye = Image.asset('assets/think_atlas.gif',
+                  width: 76, height: 50, fit: BoxFit.contain, excludeFromSemantics: true);
+              const brand = Text.rich(TextSpan(children: [
+                TextSpan(text: 'Think '),
+                TextSpan(text: 'Atlas', style: TextStyle(color: gold)),
+              ]), style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold));
+              if (bounds.maxWidth < 440 || MediaQuery.textScaleFactorOf(context) > 1.3) {
+                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  title,
+                  Wrap(spacing: 12, crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [eye, brand]),
+                ]);
+              }
+              return Row(children: [
+                const Expanded(flex: 6, child: title),
+                Expanded(flex: 2, child: Center(child: eye)),
+                const Expanded(flex: 3, child: Align(alignment: Alignment.centerRight, child: brand)),
+              ]);
+            }),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
