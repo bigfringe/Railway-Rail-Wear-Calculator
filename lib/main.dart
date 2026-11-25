@@ -193,8 +193,8 @@ class _RailWearHomeState extends State<RailWearHome> {
         Expanded(
           flex: 5,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-            Text(subtitle, style: const TextStyle(color: Color(0xFFCFDBDE))),
+            Text(title, style: TextStyle(fontSize: embedded ? 21 : 17, fontWeight: FontWeight.bold)),
+            Text(subtitle, style: TextStyle(fontSize: embedded ? 16 : null, color: const Color(0xFFCFDBDE))),
           ]),
         ),
         const SizedBox(width: 12),
@@ -208,7 +208,7 @@ class _RailWearHomeState extends State<RailWearHome> {
               }
             },
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: embedded ? 32 : 25, fontWeight: FontWeight.w800),
             decoration: fieldDecoration('0.0', unit: unit),
           ),
         ),
@@ -404,7 +404,7 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Icon(Icons.straighten, color: gold, size: 24),
                   SizedBox(width: 10),
                   Expanded(child: Text('NR4 Stepped Sidewear Gauge',
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18))),
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 24, height: 1.12))),
                 ]),
                 const SizedBox(height: 12),
                 AspectRatio(
@@ -418,17 +418,24 @@ class _RailWearHomeState extends State<RailWearHome> {
                     ),
                     child: FittedBox(
                       child: SizedBox(width: 900, height: 510, child: Stack(children: [
-                        Positioned(top: -132, left: 0, child: ColorFiltered(
+                        Positioned(top: -132, left: 0, child: ShaderMask(
+                          blendMode: BlendMode.modulate,
+                          shaderCallback: (bounds) => const LinearGradient(
+                            begin: Alignment.topLeft, end: Alignment.bottomRight,
+                            colors: [Color(0xFFBBC7D0), Colors.white, Color(0xFFADBCC7), Colors.white, Color(0xFFC4D0D8)],
+                            stops: [0, 0.33, 0.48, 0.7, 1],
+                          ).createShader(bounds),
+                          child: ColorFiltered(
                           // Key out the white backing while retaining the original metal and markings.
                           colorFilter: const ColorFilter.matrix([
-                            1, 0, 0, 0, 0,
-                            0, 1, 0, 0, 0,
-                            0, 0, 1, 0, 0,
+                            1.65, 0, 0, 0, -12,
+                            0, 1.65, 0, 0, -12,
+                            0, 0, 1.65, 0, -10,
                             -12, 0, 0, 1, 2772,
                           ]),
                           child: Image.asset('assets/nr4_reference-1.jpg',
                             width: 900, height: 670, semanticLabel: 'Two-piece NR4 stepped sidewear gauge'),
-                        )),
+                        ))),
                       ])),
                     ),
                   ),
