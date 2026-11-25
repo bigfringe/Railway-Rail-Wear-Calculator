@@ -266,8 +266,15 @@ class _RailWearHomeState extends State<RailWearHome> {
                   Text('PROFESSIONAL RAIL INSPECTION TOOL',
                     style: TextStyle(letterSpacing: 2.2, color: Color(0xFFCFDBDE), fontWeight: FontWeight.w600)),
                 ]);
-              final eye = Image.asset('assets/think_atlas.gif',
-                  width: 152, height: 100, fit: BoxFit.contain, excludeFromSemantics: true);
+              final eye = Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: gold, width: 1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Image.asset('assets/think_atlas.gif',
+                    width: 152, height: 100, fit: BoxFit.contain, excludeFromSemantics: true),
+              );
               const brand = Text.rich(TextSpan(children: [
                 TextSpan(text: 'Think '),
                 TextSpan(text: 'Atlas', style: TextStyle(color: gold)),
