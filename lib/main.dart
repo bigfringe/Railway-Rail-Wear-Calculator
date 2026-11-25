@@ -52,6 +52,8 @@ class _RailWearHomeState extends State<RailWearHome> {
   bool? withinNineMetresOfFishplate;
   double? sideResult;
   double? depthResult;
+  int calculationId = 0;
+  bool revealed = false;
 
   static const railTypes = <String>[
     '60E1 / 60E2 plain line',
@@ -118,7 +120,6 @@ class _RailWearHomeState extends State<RailWearHome> {
       return;
     }
     final selectedFullDepth = fullDepth[railType]!;
-    final selectedMinimumDepth = minimumDepth[railType]!;
     if (depth > selectedFullDepth) {
       setState(() { sideResult = null; depthResult = null; });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -128,22 +129,11 @@ class _RailWearHomeState extends State<RailWearHome> {
       return;
     }
     setState(() {
+      calculationId++;
+      revealed = false;
       sideResult = side;
       depthResult = depth;
     });
-    final lateralLoss = lateralHeadLossFromNr4Step(side);
-    final adjustedMinimum = minimumDepthForFishplateLocation(
-      baseMinimum: selectedMinimumDepth,
-      lateralHeadLoss: lateralLoss,
-      withinNineMetresOfFishplate: withinNineMetresOfFishplate!,
-    );
-    final rawGrindAvailable = depth - adjustedMinimum;
-    final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
-    if (grindAvailable <= 0) {
-      _playFailHorn();
-    } else {
-      _playTrainHorn();
-    }
   }
 
   Future<void> _playTrainHorn() async {
@@ -256,10 +246,9 @@ class _RailWearHomeState extends State<RailWearHome> {
         : 0.0;
     final rawGrindAvailable = hasResult ? depthResult! - sidewornMinDepth : 0.0;
     final grindAvailable = rawGrindAvailable > 0 ? rawGrindAvailable.floor() : 0;
-    // Exactly 1 mm or more remaining is GREEN / grind permitted.
-    // Anything below 1 mm floors to 0 and is RED / do not grind.
-    final limitReached = hasResult && grindAvailable < 1;
-    final sideOk = !limitReached;
+    final limitReached = grindAvailable < 1;
+    final caution = !limitReached && grindAvailable < 5;
+    final tone = limitReached ? Colors.redAccent : caution ? Colors.amber : const Color(0xFF00E653);
 
     return Scaffold(
       body: SafeArea(
@@ -494,44 +483,40 @@ class _RailWearHomeState extends State<RailWearHome> {
               Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: limitReached ? const Color(0xFF260B0B) : const Color(0xFF071A12),
+                  color: panel,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: sideOk ? const Color(0xFF00D84A) : Colors.redAccent, width: 2),
+                  border: Border.all(color: revealed ? tone : border, width: 2),
                 ),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Row(children: [
-                    Icon(sideOk ? Icons.visibility : Icons.warning_rounded,
-                      color: sideOk ? const Color(0xFF00E653) : Colors.redAccent, size: 42),
-                    const SizedBox(width: 12),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(sideOk ? 'GRINDING RESULT' : 'DO NOT GRIND',
-                        style: TextStyle(color: sideOk ? const Color(0xFF00E653) : Colors.redAccent,
-                          fontWeight: FontWeight.w900, fontSize: 18)),
-                      const SizedBox(height: 3),
-                      Text(sideOk ? 'GRIND PERMITTED' : 'RAIL LIMIT REACHED',
-                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20)),
-                    ])),
-                  ]),
-                  const SizedBox(height: 16),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-                    decoration: BoxDecoration(
-                      color: limitReached ? const Color(0xFF3A0909) : const Color(0xFF0A2A17),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: limitReached ? Colors.redAccent : const Color(0xFF00D84A), width: 2),
+                  if (!revealed)
+                    TweenAnimationBuilder<double>(
+                      key: ValueKey(calculationId),
+                      tween: Tween<double>(begin: 40.0, end: limitReached ? rawGrindAvailable : grindAvailable.toDouble()),
+                      curve: Curves.easeOutCubic,
+                      duration: const Duration(milliseconds: 1550),
+                      onEnd: () {
+                        setState(() => revealed = true);
+                        if (limitReached) {
+                          _playFailHorn();
+                        } else {
+                          _playTrainHorn();
+                        }
+                      },
+                      builder: (context, value, child) => Text('Result countdown  ${value.ceil()}', style: const TextStyle(fontSize: 26)),
+                    )
+                  else
+                    TweenAnimationBuilder<double>(
+                      tween: Tween<double>(begin: 0.45, end: 0.0),
+                      duration: const Duration(milliseconds: 480),
+                      builder: (context, intensity, child) => Container(
+                        width: double.infinity, padding: const EdgeInsets.all(14),
+                        color: tone.withOpacity(intensity), child: child,
+                      ),
+                      child: Text(limitReached
+                        ? 'DO NOT GRIND\nRemaining: ${rawGrindAvailable.toStringAsFixed(2)} mm'
+                        : '${caution ? "CAUTION — BELOW 5 mm" : "GRINDING RESULT"}\nDo not grind more than $grindAvailable mm',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: tone)),
                     ),
-                    child: limitReached
-                      ? Column(mainAxisSize: MainAxisSize.min, children: [
-                          const FlashingWarning(text: 'DO NOT GRIND — LIMIT REACHED'),
-                          const SizedBox(height: 8),
-                          Text('REMAINING: ${rawGrindAvailable.toStringAsFixed(2)} mm',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w900, color: Colors.redAccent)),
-                        ])
-                      : Text('DO NOT GRIND MORE THAN: $grindAvailable mm', textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF00E653))),
-                  ),
                   const SizedBox(height: 12),
                   Text('NR4 lateral head loss: ${lateralLoss.toStringAsFixed(1)} mm'),
                   Text('Minimum depth used: ${sidewornMinDepth.toStringAsFixed(1)} mm'),
