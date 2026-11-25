@@ -22,6 +22,7 @@ class RailWearApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const gold = Color(0xFFF0BE68);
     return MaterialApp(
+    builder: (context, child) => _LaunchEye(child: child!),
       debugShowCheckedModeBanner: false,
       title: 'Rail Wear Calculator',
       theme: ThemeData.dark(useMaterial3: true).copyWith(
@@ -783,4 +784,37 @@ class RailProfilePainter extends CustomPainter {
     tp.text=const TextSpan(text:'Sidewear',style:TextStyle(color:Colors.white,fontSize:16,fontWeight:FontWeight.bold));tp.layout();tp.paint(canvas,Offset(cx+82,55));
   }
   @override bool shouldRepaint(covariant CustomPainter oldDelegate)=>false;
+}
+
+class _LaunchEye extends StatefulWidget {
+  const _LaunchEye({required this.child});
+  final Widget child;
+
+  @override
+  State<_LaunchEye> createState() => _LaunchEyeState();
+}
+
+class _LaunchEyeState extends State<_LaunchEye> {
+  bool opening = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future<void>.delayed(const Duration(seconds: 4), () {
+      if (mounted) setState(() => opening = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(fit: StackFit.expand, children: [
+      ExcludeFocus(excluding: opening, child: widget.child),
+      if (opening)
+        BlockSemantics(child: ColoredBox(
+          color: Colors.black,
+          child: Image.asset('assets/think_atlas.gif',
+              fit: BoxFit.contain, semanticLabel: 'Think Atlas'),
+        )),
+    ]);
+  }
 }
