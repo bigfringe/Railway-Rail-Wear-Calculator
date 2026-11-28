@@ -16,6 +16,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - Screenshot_20261128_005800_com_google_android_googlequicksearchbox_GoogleAppActivi_edit_139221601251994.jpg
     - assets/think_atlas.gif
     - assets/nr4_gauge.jpg
     - assets/nr4_reference-1.jpg
