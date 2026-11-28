@@ -298,7 +298,29 @@ class _RailWearHomeState extends State<RailWearHome> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF233744), panel, Color(0xFF101D28)]), borderRadius: BorderRadius.circular(18), border: Border.all(color: border)),
               child: Row(children: [
-                Container(width: 48, height: 48, decoration: BoxDecoration(color: const Color(0xFF233744), borderRadius: BorderRadius.circular(14), border: Border.all(color: border)), child: const Icon(Icons.train, size: 27, color: gold)),
+                Container(
+                  width: 48,
+                  height: 48,
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFFFFE7A0), Color(0xFF9B702A), Color(0xFFEBC66C), Color(0xFF80591E)],
+                    ),
+                    boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 5, offset: Offset(0, 2))],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      'Screenshot_20261128_005800_com_google_android_googlequicksearchbox_GoogleAppActivi_edit_139221601251994.jpg',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                      excludeFromSemantics: true,
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 10),
                 const Expanded(flex: 4, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text('Rail type', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
